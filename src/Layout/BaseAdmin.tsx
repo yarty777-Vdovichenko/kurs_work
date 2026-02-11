@@ -1,3 +1,5 @@
+import { Outlet } from "react-router-dom";
+import Header from "../Components/Header";
 
 
 export default function BaseAdmin()
@@ -5,7 +7,8 @@ export default function BaseAdmin()
 
     return(
         <>
-            
+            <Header/>
+            <Outlet/>
         </>
     )
 }

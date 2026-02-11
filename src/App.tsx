@@ -1,5 +1,4 @@
 import React from 'react';
-import './App.css';
 import {BrowserRouter,Link,Route,Routes} from 'react-router-dom'
 import Home from "./Pages/Home"
 import Register from "./Pages/Register"
@@ -11,15 +10,14 @@ import Tarifs from './Pages/Tarifs';
 import Users from './Pages/Users';
 import Charts from './Pages/Charts';
 import Abonents from './Pages/Abonents';
+import Box from "@mui/material/Box"
+import "./App.css"
 
 function App() {
   return (
     <>
       <BrowserRouter>
-        <Link to="/">Home</Link>
-        <Link to="/login">Login</Link>
-        <Link to="/register">Register</Link>
-        <Link to="/srm/dashboard">Dashboard</Link>
+        
         <Routes>
           <Route path='/' element={<BaseHome/>}>
             <Route index element={<Home/>}/>
