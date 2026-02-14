@@ -1,15 +1,16 @@
 import { Avatar, Box, Drawer } from "@mui/material";
 import { Dashboard, CreditCard, Group, ShowChart, ExitToApp, PersonOutline } from "@mui/icons-material";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function RightPanel({open,setOpen}:{open:boolean;setOpen:(value:boolean)=>void}) {
-
+ const navigate = useNavigate();
   const menuItems = [
-    { text: "Дашборд", icon: <Dashboard /> },
-    { text: "Користувачі", icon: <PersonOutline /> },
-    { text: "Тарифи", icon: <CreditCard /> },
-    { text: "Абоненти", icon: <Group /> },
-    { text: "Графіки", icon: <ShowChart /> },
+    { text: "Дашборд", icon: <Dashboard />,path:"dashboard" },
+    { text: "Користувачі", icon: <PersonOutline />,path:"users" },
+    { text: "Тарифи", icon: <CreditCard />,path:"abonents" },
+    { text: "Абоненти", icon: <Group />,path:"tarifs" },
+    { text: "Графіки", icon: <ShowChart /> ,path:"charts"},
   ];
 
   return (
@@ -40,6 +41,9 @@ export default function RightPanel({open,setOpen}:{open:boolean;setOpen:(value:b
       <Box>
         {menuItems.map((item) => (
           <Box
+            onClick={() => {
+              navigate(item.path);
+            }}
             key={item.text}
             sx={{
               display: "flex",
@@ -52,7 +56,7 @@ export default function RightPanel({open,setOpen}:{open:boolean;setOpen:(value:b
             <Box sx={{ display: "flex", color: "white", minWidth: 40, justifyContent: "center" }}>
               {item.icon}
             </Box>
-            {open && <Box sx={{ marginLeft: 2,fontSize:18}}>{item.text}</Box>}
+            {open && <Box sx={{ marginLeft: 2,fontSize:18,transition:"0.3s"}}>{item.text}</Box>}
           </Box>
         ))}
       </Box>
