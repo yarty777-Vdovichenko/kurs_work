@@ -7,7 +7,7 @@ export default function BaseHome()
 
     return(
         <>
-            <Header/>
+            <Header />
             <Outlet/>
         </>
     )

@@ -1,5 +1,6 @@
 import { Outlet } from "react-router-dom";
 import Header from "../Components/Header";
+import RightPanel from "../Components/RightPanel";
 
 
 export default function BaseAdmin()
@@ -7,7 +8,9 @@ export default function BaseAdmin()
 
     return(
         <>
-            <Header/>
+        <RightPanel />
+            <Header color="green" />
+            
             <Outlet/>
         </>
     )
