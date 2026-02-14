@@ -47,7 +47,7 @@ export default function Login()
             /></svg>
             <Box sx={{
                 backgroundColor:"#010101",
-                height:"100vh",
+                minHeight: "100vh",
                 width:"30%",
                 paddingTop:"200px",
                 display:"flex",
