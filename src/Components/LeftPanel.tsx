@@ -3,7 +3,7 @@ import { Dashboard, CreditCard, Group, ShowChart, ExitToApp, PersonOutline } fro
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-export default function RightPanel({open,setOpen}:{open:boolean;setOpen:(value:boolean)=>void}) {
+export default function LeftPanel({open,setOpen}:{open:boolean;setOpen:(value:boolean)=>void}) {
   const [clicked,setClicked]=useState("Дашборд");
  const navigate = useNavigate();
   const menuItems = [
