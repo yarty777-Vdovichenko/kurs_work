@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function RightPanel({open,setOpen}:{open:boolean;setOpen:(value:boolean)=>void}) {
+  const [clicked,setClicked]=useState("Дашборд");
  const navigate = useNavigate();
   const menuItems = [
     { text: "Дашборд", icon: <Dashboard />,path:"dashboard" },
@@ -43,6 +44,7 @@ export default function RightPanel({open,setOpen}:{open:boolean;setOpen:(value:b
           <Box
             onClick={() => {
               navigate(item.path);
+              setClicked(item.text);
             }}
             key={item.text}
             sx={{
@@ -50,8 +52,11 @@ export default function RightPanel({open,setOpen}:{open:boolean;setOpen:(value:b
               alignItems: "center",
               padding: "12px 4px",
               cursor: "pointer",
+              transition:"0.3s",
               "&:hover": { backgroundColor: "#3C7B56" },
+              backgroundColor: item.text===clicked ? "#9ACFB1" : "#1F4F34"
             }}
+            
           >
             <Box sx={{ display: "flex", color: "white", minWidth: 40, justifyContent: "center" }}>
               {item.icon}
@@ -62,15 +67,18 @@ export default function RightPanel({open,setOpen}:{open:boolean;setOpen:(value:b
       </Box>
       <Box>
         <Box
+        onClick={()=>navigate("../")}
             sx={{
               display: "flex",
               alignItems: "center",
               padding: "12px 4px",
               cursor: "pointer",
-              backgroundColor:"#9ACFB1",
+              backgroundColor:"#ec813f",
               transition:"0.3s",
-              "&:hover": { backgroundColor: "#3C7B56" },
+              "&:hover": { backgroundColor: "#c86426" },
+              
             }}
+            
           >
             <Box sx={{ display: "flex", color: "white", minWidth: 40, justifyContent: "center" }}>
               <ExitToApp/>
