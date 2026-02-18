@@ -61,7 +61,7 @@ function lookForData()
                 }}
                 placeholder="Пошук..." InputProps={{endAdornment:<Box sx={{display:"flex",flexDirection:"row"}}><IconButton onClick={lookForData}><Search/></IconButton><IconButton onClick={()=>{setSearchText("");}}><Cancel/></IconButton></Box>}}>
                 </TextField>    
-                <Box  sx={{flex:1,backgroundColor:"#1F4F34",borderRadius:"20px"}}>
+                <Box  sx={{flex:1,backgroundColor:"#1F4F34",borderRadius:"20px",p:1}}>
                     <DataGrid
                     rows={searchData}
                     columns={columns}
@@ -78,7 +78,7 @@ function lookForData()
                 }} onClick={()=>{setOpen(true)}}
                 >Додати</Button>
             </Box>
-            <RightDrawer open={open} setOpen={setOpen} setData={setData}></RightDrawer>
+            <RightDrawer  open={open} setOpen={setOpen} setData={setData}></RightDrawer>
         </Box>
     )
 }
