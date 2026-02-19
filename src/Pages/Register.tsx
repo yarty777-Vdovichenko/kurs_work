@@ -80,28 +80,23 @@ export default function Register()
                         backgroundColor:"#fff",
                         width:"80%"
                     }}></TextField>
-                    
-                     <TextField 
-                        variant="filled" 
-                        label="password" 
-                        type={showPassword ? "text" : "password"}  // ← перемикання типу
-                        sx={{
-                            backgroundColor:"#fff",
-                            width:"80%"
-                        }}
-                        InputProps={{
-                            endAdornment: (
-                            <InputAdornment position="end">
-                                <IconButton
-                                onClick={() => setShowPassword(!showPassword)}
-                                edge="end"
-                                >
-                                {showPassword ?  <VisibilityIcon /> : <VisibilityOffIcon />}
-                                </IconButton>
-                            </InputAdornment>
-                            )
-                        }}
-                    />
+                    <Box sx={{width:"80%",display:"flex"}}>
+                        <TextField 
+                            variant="filled" 
+                            label="password" 
+                            type={showPassword ? "text" : "password"}
+                            sx={{
+                                backgroundColor:"#fff",
+                                width:"80%",flex:"80%"
+                            }}
+                        ></TextField>
+                        <IconButton sx={{color:"white"}}
+                            onClick={() => setShowPassword(!showPassword)}
+                            edge="end"
+                            >
+                            {showPassword ?  <VisibilityIcon /> : <VisibilityOffIcon />}
+                        </IconButton>
+                    </Box>
                     <Box 
                     sx={{
                         width:"80%",

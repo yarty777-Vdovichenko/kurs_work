@@ -1,5 +1,5 @@
-import { Cancel, Close, Delete, Edit, EditAttributes, Search } from "@mui/icons-material";
-import { Box, Button, Drawer, FormControl, IconButton, InputLabel, MenuItem, Select, TextField, Typography } from "@mui/material";
+import { Cancel, Delete, Search } from "@mui/icons-material";
+import { Box, Button, IconButton,TextField, } from "@mui/material";
 import { useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import RightDrawer from "../Components/RightDrawerUsers";
@@ -13,11 +13,9 @@ export default function Users()
         { id: "1", name: "Ivan", email: "ivan@mail.com", role: "Admin" },
         { id: "2", name: "Olena", email: "olena@mail.com", role: "Operator" }
     ])  
-    const searchData = data.filter((row) =>
-    row.name.toLowerCase().includes(searchText.toLowerCase()) ||
-    row.email.toLowerCase().includes(searchText.toLowerCase()) ||
-    row.role.toLowerCase().includes(searchText.toLowerCase())
-);
+    
+    const [filteredRows,setfilteredRows]=useState([...data]);
+
     const columns=[
         {field: "name", headerName: "Імʼя",flex: 1},
         {field: "email", headerName: "Email",flex: 1 },
@@ -30,11 +28,12 @@ function deleteById(id:string)
 }
 function lookForData()
 {
-    const filteredRows = data.filter((row)=>
+    const newFilteredRows = data.filter((row)=>
     row.name.toLowerCase().includes(searchText.toLowerCase()) ||
     row.email.toLowerCase().includes(searchText.toLowerCase()) ||
     row.role.toLowerCase().includes(searchText.toLowerCase())
     );
+    setfilteredRows(newFilteredRows);
 }
 
 
@@ -59,11 +58,11 @@ function lookForData()
                     borderRadius:1,
                     backgroundColor:"white",
                 }}
-                placeholder="Пошук..." InputProps={{endAdornment:<Box sx={{display:"flex",flexDirection:"row"}}><IconButton onClick={lookForData}><Search/></IconButton><IconButton onClick={()=>{setSearchText("");}}><Cancel/></IconButton></Box>}}>
+                placeholder="Пошук..." InputProps={{endAdornment:<Box sx={{display:"flex",flexDirection:"row"}}><IconButton onClick={lookForData}><Search/></IconButton><IconButton onClick={()=>{setSearchText("");setfilteredRows([...data])}}><Cancel/></IconButton></Box>}}>
                 </TextField>    
                 <Box  sx={{flex:1,backgroundColor:"#1F4F34",borderRadius:"20px",p:1}}>
                     <DataGrid
-                    rows={searchData}
+                    rows={filteredRows}
                     columns={columns}
                     sx={{borderRadius:"20px"}}
                     />
