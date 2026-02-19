@@ -9,8 +9,8 @@ export default function LeftPanel({open,setOpen}:{open:boolean;setOpen:(value:bo
   const menuItems = [
     { text: "Дашборд", icon: <Dashboard />,path:"dashboard" },
     { text: "Користувачі", icon: <PersonOutline />,path:"users" },
-    { text: "Тарифи", icon: <CreditCard />,path:"abonents" },
-    { text: "Абоненти", icon: <Group />,path:"tarifs" },
+    { text: "Тарифи", icon: <CreditCard />,path:"tarifs" },
+    { text: "Абоненти", icon: <Group />,path:"abonents" },
     { text: "Графіки", icon: <ShowChart /> ,path:"charts"},
   ];
 
