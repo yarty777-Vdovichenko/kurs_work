@@ -1,15 +1,17 @@
-import { Avatar, Box } from "@mui/material";
+import { Avatar, Box, Color } from "@mui/material";
 import { Link } from "react-router-dom";
 import logo from "../assets/crm.png";
 
-export default function Header() {
+export default function Header({color}:{color?:string}) {
   return (
     <Box
       sx={{
+        
         width: "100%",
         py: 1,
         px: 2,
-        backgroundColor: "#4DA3FF",
+        height:"50px",
+        backgroundColor: !color ? "#4DA3FF" : "#1F4F34",
         display: "flex",
         alignItems: "center",
         gap: 2,

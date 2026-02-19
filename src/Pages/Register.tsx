@@ -20,7 +20,7 @@ export default function Register()
             position: "absolute",
             width: "70%",
             left: "30%",
-            height: "100%",
+            minHeight: "100%",
             boxShadow: "0 0 40px rgb(255, 255, 255)",
             objectFit: "cover",
             
@@ -42,7 +42,7 @@ export default function Register()
        
             <Box sx={{
                 backgroundColor:"#010101",
-                height:"100vh",
+                minHeight: "100vh",
                 width:"30%",
                 paddingTop:"50px",  
                 display:"flex",
@@ -50,17 +50,17 @@ export default function Register()
                 flexDirection:"column",
                 "@media (max-width: 1200px)": {
                     width: "50%",
-                    paddingTop: "150px",
+                    paddingTop: "50px",
                 },
                 
                 "@media (max-width: 900px)": {
                     width: "70%",
-                    paddingTop: "120px",
+                    paddingTop: "30px",
                 },
                 
                 "@media (max-width: 600px)": {
                     width: "100%",
-                    paddingTop: "100px",
+                    paddingTop: "20px",
                 }
             }}>
                 <Box sx={{
@@ -80,28 +80,23 @@ export default function Register()
                         backgroundColor:"#fff",
                         width:"80%"
                     }}></TextField>
-                    
-                     <TextField 
-                        variant="filled" 
-                        label="password" 
-                        type={showPassword ? "text" : "password"}  // ← перемикання типу
-                        sx={{
-                            backgroundColor:"#fff",
-                            width:"80%"
-                        }}
-                        InputProps={{
-                            endAdornment: (
-                            <InputAdornment position="end">
-                                <IconButton
-                                onClick={() => setShowPassword(!showPassword)}
-                                edge="end"
-                                >
-                                {showPassword ?  <VisibilityIcon /> : <VisibilityOffIcon />}
-                                </IconButton>
-                            </InputAdornment>
-                            )
-                        }}
-                    />
+                    <Box sx={{width:"80%",display:"flex"}}>
+                        <TextField 
+                            variant="filled" 
+                            label="password" 
+                            type={showPassword ? "text" : "password"}
+                            sx={{
+                                backgroundColor:"#fff",
+                                width:"80%",flex:"80%"
+                            }}
+                        ></TextField>
+                        <IconButton sx={{color:"white"}}
+                            onClick={() => setShowPassword(!showPassword)}
+                            edge="end"
+                            >
+                            {showPassword ?  <VisibilityIcon /> : <VisibilityOffIcon />}
+                        </IconButton>
+                    </Box>
                     <Box 
                     sx={{
                         width:"80%",
