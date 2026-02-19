@@ -12,7 +12,7 @@ type User = {
 type RightDrawerProps = {
     open: boolean;
     setOpen: (value: boolean) => void;
-    setData: React.Dispatch<React.SetStateAction<User[]>>;
+    setData: (users: User[] | ((prev: User[]) => User[])) => void;
 };
 
 export default function RightDrawer({
@@ -46,10 +46,7 @@ export default function RightDrawer({
         }
     
         const newUser = {id: Date.now().toString(), name, email, role }
-        setData(prev => {
-        const updated = [...prev, newUser];
-        return updated;
-        });
+        setData(prev => [...prev, newUser]);
     clear();
     }
     return (

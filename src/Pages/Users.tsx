@@ -21,10 +21,12 @@ export default function Users()
         {field: "email", headerName: "Email",flex: 1 },
         {field: "role", headerName: "Роль",flex: 1},
         {field: "actions",headerName: "",renderCell: (params:any) => <Delete  onClick={()=>deleteById(params.id)} sx={{"&:hover":{cursor:"pointer"}}} ></Delete>,width:50,sortable:false,filterable:false}
-]
+] 
 function deleteById(id:string)
 {
-    setData(prev => prev.filter(dat => dat.id !== id));
+    const deletee= data.filter(dat => dat.id !== id)
+    setData(deletee);
+    setfilteredRows(deletee);
 }
 function lookForData()
 {
