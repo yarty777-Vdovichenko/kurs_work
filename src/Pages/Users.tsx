@@ -1,6 +1,6 @@
 import { Cancel, Delete, Search } from "@mui/icons-material";
 import { Box, Button, IconButton,TextField, } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import RightDrawer from "../Components/RightDrawerUsers";
 
@@ -14,6 +14,8 @@ export default function Users()
         { id: "2", name: "Olena", email: "olena@mail.com", role: "Operator" }
     ])  
     
+    useEffect(()=>setfilteredRows([...data]),[data]);
+
     const [filteredRows,setfilteredRows]=useState([...data]);
 
     const columns=[
