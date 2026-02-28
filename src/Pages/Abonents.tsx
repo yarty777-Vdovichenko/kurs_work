@@ -1,4 +1,4 @@
-import { Cancel, Close, Delete, Search, SimCard } from "@mui/icons-material";
+import { Add, Cancel, Close, Delete, Search, SimCard } from "@mui/icons-material";
 import { Box, Button, IconButton,TextField, } from "@mui/material";
 import { useEffect, useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
@@ -32,6 +32,7 @@ type Subscriber ={
 
 export default function Abonents()
 {
+    const [curentId,setCurrentId]=useState("");
     const [searchText,setSearchText]=useState('');
     const [open,setOpen]=useState(false);
     const [openSims,setOpenSims]=useState(false);
@@ -59,8 +60,11 @@ export default function Abonents()
         {field: "viewSims",headerName: "",renderCell: (params:any) => 
             <SimCard  onClick={()=>{setSelectedSis(params.row.sims);setOpenSims(true);}} sx={{"&:hover":{cursor:"pointer"}}} >
             </SimCard>,width:50,sortable:false,filterable:false},
+        {field: "addSims",headerName: "",renderCell: (params:any) => 
+            <Add  onClick={()=>{setCurrentId(params.row.id);}} sx={{"&:hover":{cursor:"pointer"}}} >
+            </Add>,width:50,sortable:false,filterable:false},
         {field: "delete",headerName: "",renderCell: (params:any) => 
-            <Delete  onClick={()=>deleteByIdSubscriber(params.id)} sx={{"&:hover":{cursor:"pointer"}}} >
+            <Delete  onClick={()=>deleteByIdSubscriber(params.row.id)} sx={{"&:hover":{cursor:"pointer"}}} >
             </Delete>,width:50,sortable:false,filterable:false},     
     ] 
     const columnsSis=[
