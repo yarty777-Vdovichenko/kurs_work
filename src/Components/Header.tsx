@@ -1,4 +1,4 @@
-import { Avatar, Box, Color } from "@mui/material";
+import { Avatar, Box } from "@mui/material";
 import { Link } from "react-router-dom";
 import logo from "../assets/crm.png";
 
