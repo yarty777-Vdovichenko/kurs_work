@@ -11,7 +11,7 @@ import Users from './Pages/Users';
 import Charts from './Pages/Charts';
 import Abonents from './Pages/Abonents';
 import Box from "@mui/material/Box"
-import "./App.css"
+import "./styles/App.css"
 
 function App() {
   return (
