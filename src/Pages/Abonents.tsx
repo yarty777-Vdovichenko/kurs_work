@@ -2,7 +2,6 @@ import { Add, Cancel, Close, Delete, Search, SimCard } from "@mui/icons-material
 import { Box, Button, IconButton,TextField, } from "@mui/material";
 import { useEffect, useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
-import RightDrawerSubscriber from "../Components/RightDrawerSubscriber";
 
 type Tarif ={
     id:string,
@@ -169,9 +168,7 @@ function lookForData() {
                     "&:hover":{backgroundColor:"#479b6a"}
                 }} onClick={()=>{{setOpen(true)}}}
                 >Додати</Button>
-
-                <RightDrawerSubscriber dataTarif={dataTarif} open={open} setOpen={setOpen} setData={setDataSubscriber}></RightDrawerSubscriber>
-            </Box>
+                </Box>
         </Box>
     )
 }
