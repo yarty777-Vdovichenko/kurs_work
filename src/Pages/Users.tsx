@@ -1,7 +1,9 @@
-import { Box, Button, IconButton,TextField, } from "@mui/material";
-import { useState } from "react";
+import { Box, Button, colors, IconButton,TextField, } from "@mui/material";
+import { useEffect, useState } from "react";
 import UserDrawer from "../Components/UserDrawer.tsx";
 import "../styles/Base.css"
+import { deleteUser, getUsers } from "../api/api.ts";
+import { Clear, CopyAll, Delete } from "@mui/icons-material";
 
 const selected={backgroundColor:"#52b57d"}
 export default function Users()
@@ -20,9 +22,37 @@ export default function Users()
         {id:"9",name:"yarty",email:"yaroslav0908l@gmail.com",role:"User"},
         {id:"10",name:"yarty",email:"yaroslav0908l@gmail.com",role:"User"},
     ])
+
+    useEffect(()=>{
+        async function loadUser(){
+            try{
+                const responce = await getUsers();
+
+                setUsers(responce);
+            }catch(error)
+            {
+                console.log(error);
+            }
+        }
+        
+        loadUser();
+    },[])
+
     function changeSelect(id:string){
         setSelectedUsers(prev=> prev.includes(id) ? prev.filter(u=>u!==id) : [...prev,id])
     }
+
+    async function deleteSelected(){
+        try{
+            await Promise.all(selectedUsers.map(id=>deleteUser(id)))
+            setUsers(prev => prev.filter(user=> !selectedUsers.includes(user.id)))
+            setSelectedUsers([]);
+        }
+        catch(error){
+            console.log(error)
+        }
+    }
+
     return(
         <div className="mainUser">
             <div className="search" id="search">
@@ -42,6 +72,20 @@ export default function Users()
                     12t-2.325-5.675T12 4T6.325 6.325T4 12t2.325 5.675T12 20m0-8"/></svg>
                  </IconButton>
             </div>
+            {selectedUsers.length === 0 && 
+            <div className="simple">
+                <p>Центр управління користувачами: всі, хто підключений до нашого сервісу, в одному місці</p>
+            </div>}
+            {selectedUsers.length > 0 && 
+            <div className="menu">
+                <p>Вибрано користувачів: {selectedUsers.length}</p>
+                <div>
+                    <IconButton onClick={()=>deleteSelected()}><Delete sx={{fontSize:"32px",color:"white"}}/></IconButton>
+                    <IconButton onClick={()=>{}}><CopyAll sx={{fontSize:"32px",color:"white"}}/></IconButton>
+                    <IconButton onClick={()=>setSelectedUsers([])}><Clear sx={{fontSize:"32px",color:"white"}}/></IconButton>
+                </div>
+            </div>
+            }
             <div className="cardsUser">
                 {users.map(user=>{
                     return(
