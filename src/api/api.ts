@@ -22,8 +22,6 @@ export async function login(email:string,password:string) {
     return userData;
 }
 
-    //user
-
 api.interceptors.request.use((config)=>{
     const token = localStorage.getItem("accessToken")
 
@@ -33,6 +31,8 @@ api.interceptors.request.use((config)=>{
 
     return config;
 })
+
+//user
 
 export async function getUsers() {
     const responce =await api.get("/users");
