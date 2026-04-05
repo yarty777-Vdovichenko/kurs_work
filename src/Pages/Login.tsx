@@ -14,20 +14,24 @@ export default function Login()
     const [showPassword, setShowPassword] = useState(false);
     const navigate= useNavigate();
     const [loading,setLoading]=useState(false);
+    const [error, setError] = useState<string>("");
 
     const  userLogin = async () =>
     {
         try
         {
             setLoading(true);
+            setError("");
 
             const response = await login(email,password);
             
             navigate("/srm/dashboard")
         }
-        catch (Eror)
+        catch (Eror:any)
         {
-            console.log("Error API:",Eror)
+            console.log("Error API:",Eror);
+
+            setError(Eror);
         }
         finally
         {
@@ -150,6 +154,11 @@ export default function Login()
                         }}>
                             {!loading ? "Увійти" : "Завантаження..."}
                         </Button>
+                        {error && 
+                            <Box sx={{color:"red",display:"flex",justifyContent:"center",fontSize:"24px"}}>
+                                {error}
+                            </Box>
+                        }
                     </Box>
                 </Box>
             </Box>

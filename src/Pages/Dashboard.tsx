@@ -1,11 +1,9 @@
-import { Box, Button, Stack, Typography } from '@mui/material';
-import { useState } from 'react';
 import "../styles/dashboard.css"
 
 export default function Dashboard() {
 
   return (
-    <main>
+    <div className="main">
       <div className='card'>
         Абоненти
       </div>
@@ -33,6 +31,6 @@ export default function Dashboard() {
       <div className='additionalDiagram'>
 
       </div>
-    </main>
+    </div>
   );
 }

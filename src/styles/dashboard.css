@@ -1,10 +1,6 @@
-* {
-    margin: 0px;
-    padding: 0px;
-}
-main{
+.main{
     background-color: #0C2F1D;
-    min-width: 100%;
+    width: 100%;
     min-height: calc(100vh - 50px);
     display: grid;
     grid-template-columns: repeat(10,1fr);

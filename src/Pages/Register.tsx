@@ -1,4 +1,4 @@
-import { Box, Button, IconButton, InputAdornment, TextField } from "@mui/material";
+import { Box, Button, IconButton, InputAdornment, MenuItem, Select, TextField } from "@mui/material";
 import back2 from "../assets/back2.jpg"
 import {} from "@mui/icons-material"
 import { useState } from "react";
@@ -12,19 +12,48 @@ export default function Register()
     const[email,setEmail]=useState("");
     const[password,setPassword]=useState("");
     const[name,setName]=useState("");
+    const[role,setRole]=useState<"Manager" | "Admin" | "User" | "">("");
     const[loading,setLoading]=useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const navigate=useNavigate();
+    const [error,setError]=useState<string>("");
+    
     const userRegister = async () => {
+        setError("");
+
+        if(!role){
+            setError("Empty role");
+            return;
+        }
+
+        if(!email.includes("@")||!email.includes("."))
+        {
+            setError("Wrong email format");
+            return;
+        }
+
+        if(name.length<4)
+        {
+            setError("Short name");
+            return;
+        }
+
+        if(password.length<8)
+        {
+            setError("Short name");
+            return;
+        }
+
         try
         {
             setLoading(true);
-            await register(name,email,password);
+            await register(name,role,email,password);
             navigate("/srm/dashboard")
         }
-        catch(error)
-        {
-            console.log("Error: ",error)
+        catch (error: any) {
+            console.log("Error: ", error);
+
+            setError(error);
         }
         finally
         {
@@ -59,8 +88,7 @@ export default function Register()
             opacity: 0,
             }
         }}
-        />
-       
+        />     
             <Box sx={{
                 backgroundColor:"#010101",
                 minHeight: "100vh",
@@ -125,14 +153,27 @@ export default function Register()
                             >
                             {showPassword ?  <VisibilityIcon /> : <VisibilityOffIcon />}
                         </IconButton>
+                        
                     </Box>
+                    <Select sx={{backgroundColor:"white",width:"80%",borderRadius:1}}
+                        value={role}
+                        onChange={(e)=>setRole(e.target.value)}>
+                        <MenuItem value="Meneger">Meneger</MenuItem>
+                        <MenuItem value="Admin">Operator</MenuItem>
+                        <MenuItem value="User">Admin</MenuItem>
+                    </Select>
+                    {error && 
+                        <Box sx={{color:"red",display:"flex",justifyContent:"center",fontSize:"24px"}}>
+                            {error}
+                        </Box>
+                    }
                     <Box 
                     sx={{
                         width:"80%",
                         display:"flex",
                         gap:2,
                         flexDirection:"column",
-                        mt:8
+                        mt:2
                     }}> 
                         <Button  variant="contained" 
                         onClick={()=>userRegister()}
@@ -147,6 +188,7 @@ export default function Register()
                         }}>
                             {loading? "Завантаження...":"Увійти"}
                         </Button>
+                        
                     </Box>
                 </Box>
             </Box>

@@ -2,7 +2,6 @@ import { Cancel, Delete, Search } from "@mui/icons-material";
 import { Box, Button, IconButton,TextField, } from "@mui/material";
 import { useEffect, useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
-import RightDrawer from "../Components/RightDrawerTarif";
 
 /*
 назва
@@ -89,7 +88,6 @@ function lookForData()
                 }} onClick={()=>{setOpen(true)}}
                 >Додати</Button>
             </Box>
-            <RightDrawer open={open} setOpen={setOpen} setData={setData}/>
         </Box>
     )
 }
