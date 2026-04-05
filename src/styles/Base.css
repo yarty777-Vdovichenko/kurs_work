@@ -11,7 +11,7 @@
     display: flex;  
 }
 .simple{
-    height: 76px;
+    height: 88px;
     display: flex;  
     align-items: center;
     padding: 20px;
@@ -24,8 +24,6 @@
     top: 70px;
     z-index: 90;
     position: sticky;
-    margin-right: 10px;
-    margin-left: 10px;
     padding: 20px;
     border-radius: 20px;
     background-color: #234230;
@@ -112,24 +110,48 @@
 .iconsUsers{
     position: fixed;
     top: 90%;
-    left: 89%;
+    right: 30px;
     display: flex;
     gap: 15px;
+    animation: moveRight 0.3s ease;
+}
+.iconsUsers.open{
+    right: 415px;
+    animation: moveLeft 0.3s ease;
+}
+@keyframes moveLeft {
+    from{
+        right: 30px;
+    }
+    to{
+        right: 415px;
+    }
+}
+@keyframes moveRight {
+    from{
+        right: 415px;
+    }
+    to{
+        right: 30px;
+    }
 }
 .drawer{
     padding-top: 50px;
     position: fixed;
-    right: 0px;
+    right:0px;
     top: 0;
-    width: 0px;
-    height: 100vh;  
-    transition: width 0.3s ease;
-}
-.drawer.open{
     width: 400px;
+    height: 100vh;  
+    animation: addMenuApear 0.3s ease;
 }
-
-
+@keyframes addMenuApear {
+    from{
+        right: -400px;
+    }
+    to{
+        right: 0px;
+    }
+}
 
 
 
@@ -139,11 +161,11 @@
     height: 100vh;
     width: 100%;
     padding-top: 50px;
-    background-color: #1F5A40;
+    background-color: #1F4F34;
     display: flex;
     flex-direction: column;
     align-items: center;
-
+    box-shadow: -12px 0px 12px rgba(0,0,0,0.6);
     gap: 50px;
 }
 .drawerMain h3{

@@ -19,7 +19,7 @@ export default function Drawer({setOpen}:{setOpen:(value:boolean)=>void}){
                 setMessage("Created")
             }
         }   
-        catch(eror: any) {
+        catch(eror:any) {
             console.error("Помилка створення користувача:", eror);
             
             let errorMessage = "Невідома помилка";
@@ -65,8 +65,8 @@ export default function Drawer({setOpen}:{setOpen:(value:boolean)=>void}){
                 value={role}
                 onChange={(e)=>setRole(e.target.value)}>
                 <MenuItem value="Meneger">Meneger</MenuItem>
-                <MenuItem value="Operator">Operator</MenuItem>
-                <MenuItem value="Admin">Admin</MenuItem>
+                <MenuItem value="Admin">Operator</MenuItem>
+                <MenuItem value="User">Admin</MenuItem>
             </Select>
             <IconButton 
             onClick={()=>setOpen(false)}
@@ -80,10 +80,12 @@ export default function Drawer({setOpen}:{setOpen:(value:boolean)=>void}){
             </IconButton>
             <div style={{width:"80%",display:"flex",gap:"10px",paddingTop:"50px"}}>            
                 <Button sx={{
-                    backgroundColor:"#9ACFB1",flex:1,p:2,color:"white"
+                    backgroundColor:"#9ACFB1",flex:1,p:2,color:"white",transition:"0.3s",
+                    "&:hover":{backgroundColor:"#7aaa8f"}
                 }} onClick={()=>sendUser()}>Підтвердити</Button>
                 <Button sx={{
-                    backgroundColor:"#c86426",flex:1,p:2,color:"white"
+                    backgroundColor:"#c86426",flex:1,p:2,color:"white",transition:"0.3s",
+                    "&:hover":{backgroundColor:"#9b4e1f"}
                 }} onClick={()=>{setEmail("");setMessage("");setRole("");}}>Очистити</Button>
             </div>
             {message && <p>{message}</p>}

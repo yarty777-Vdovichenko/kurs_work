@@ -4,22 +4,40 @@ const api = axios.create({baseURL:"https://localhost:7058/api",headers:{"Content
 
 //Auth
 
-export async function register(name:string,email:string,password:string)
+export async function register(name:string,role:string,email:string,password:string)
 {
-    const responce = await api.post("/auth/register",{name,email,password});
+    try{
+    const responce = await api.post("/auth/register",{name,role,email,password});
     const {accessToken, ...userData}=responce.data;
     localStorage.setItem("accessToken",accessToken);
 
     return userData;
+    }
+    catch(error:any){
+        if (error.message){
+            throw error.response.data.message;
+        } else {
+            throw "Server error";
+        }
+    }
 }
 
 export async function login(email:string,password:string) {
-    const responce = await api.post("/auth/login",{email,password});
-    const {accessToken, ...userData}=responce.data;
+    try{
+        const responce = await api.post("/auth/login",{email,password});
+        const {accessToken, ...userData}=responce.data;
 
-    localStorage.setItem("accessToken",accessToken);
+        localStorage.setItem("accessToken",accessToken);
 
-    return userData;
+        return userData;
+    }
+    catch(error:any){
+        if (error.response) {
+            throw error.response.data.message;
+        } else {
+            throw "Server error";
+        }
+    }
 }
 
 api.interceptors.request.use((config)=>{

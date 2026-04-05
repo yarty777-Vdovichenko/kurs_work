@@ -1,5 +1,4 @@
-import React from 'react';
-import {BrowserRouter,Link,Route,Routes} from 'react-router-dom'
+import {BrowserRouter,Route,Routes} from 'react-router-dom'
 import Home from "./Pages/Home"
 import Register from "./Pages/Register"
 import Login from "./Pages/Login"
@@ -10,7 +9,6 @@ import Tarifs from './Pages/Tarifs';
 import Users from './Pages/Users';
 import Charts from './Pages/Charts';
 import Abonents from './Pages/Abonents';
-import Box from "@mui/material/Box"
 import "./styles/App.css"
 
 function App() {

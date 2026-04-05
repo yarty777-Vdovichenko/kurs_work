@@ -1,9 +1,9 @@
-import { Box, Button, colors, IconButton,TextField, } from "@mui/material";
+import {IconButton,TextField, } from "@mui/material";
 import { useEffect, useState } from "react";
 import UserDrawer from "../Components/UserDrawer.tsx";
 import "../styles/Base.css"
 import { deleteUser, getUsers } from "../api/api.ts";
-import { Clear, CopyAll, Delete, Refresh } from "@mui/icons-material";
+import { Clear, Delete, FilterAlt, Refresh } from "@mui/icons-material";
 
 const selected={backgroundColor:"#52b57d"}
 export default function Users()
@@ -22,6 +22,7 @@ export default function Users()
         {id:"9",name:"yarty",email:"yaroslav0908l@gmail.com",role:"User"},
         {id:"10",name:"yarty",email:"yaroslav0908l@gmail.com",role:"User"},
     ])
+
     async function loadUser(){
         try{
             const responce = await getUsers();
@@ -32,6 +33,7 @@ export default function Users()
             console.log(error);
         }
     }
+
     useEffect(()=>{
         loadUser();
     },[])
@@ -41,6 +43,10 @@ export default function Users()
     }
 
     async function deleteSelected(){
+        const isConfirmed = window.confirm("Ви впевнені, що хочете видалити вибраних користувачів? Ви розумієте що вони втратять доступ до данного застосунку?");
+    
+        if (!isConfirmed) return;
+
         try{
             await Promise.all(selectedUsers.map(id=>deleteUser(id)))
             setUsers(prev => prev.filter(user=> !selectedUsers.includes(user.id)))
@@ -61,6 +67,7 @@ export default function Users()
                     5.6q.275.275.275.7t-.275.7t-.7.275t-.7-.275l-5.6-5.6q-.75.6-1.725.95T9.5 16m0-2q1.875 0 3.188-1.312T14 
                     9.5t-1.312-3.187T9.5 5T6.313 6.313T5 9.5t1.313 3.188T9.5 14"/></svg>
                  </IconButton>
+                    <IconButton><FilterAlt sx={{fontSize:"28px",color:"white"}}/></IconButton>
                  <IconButton>
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="white" 
                     d="m8.4 17l3.6-3.6l3.6 3.6l1.4-1.4l-3.6-3.6L17 8.4L15.6 7L12 10.6L8.4 7L7 
@@ -79,7 +86,7 @@ export default function Users()
                 <p>Вибрано користувачів: {selectedUsers.length}</p>
                 <div>
                     <IconButton onClick={()=>deleteSelected()}><Delete sx={{fontSize:"32px",color:"white"}}/></IconButton>
-                    <IconButton onClick={()=>{}}><CopyAll sx={{fontSize:"32px",color:"white"}}/></IconButton>
+                    
                     <IconButton onClick={()=>setSelectedUsers([])}><Clear sx={{fontSize:"32px",color:"white"}}/></IconButton>
                 </div>
             </div>
@@ -87,7 +94,7 @@ export default function Users()
             <div className="cardsUser">
                 {users.map(user=>{
                     return(
-                        <div key={user.id} className={selectedUsers.includes(user.id)? "cardUser selected": "cardUser"} onClick={()=>changeSelect(user.id)}>
+                        <div key={user.id} className={selectedUsers.includes(user.id)? "cardUser selected": "cardUser"} onClick={()=>{changeSelect(user.id),setOpen(false)}}>
                             <div className="dataUser">
                                 <span>ID: {user.id}</span>
                                 <span className="roleUser">Role: {user.role}</span>
@@ -99,7 +106,7 @@ export default function Users()
                     )
                 })}
             </div>
-            <div className="iconsUsers">
+            <div className={!open?"iconsUsers":"iconsUsers open"}>
                 <IconButton
                 onClick={()=>window.scrollTo({ top: 0, behavior: "smooth" })}
                 sx={{
@@ -136,7 +143,7 @@ export default function Users()
                 </IconButton>
             </div>
             {open&&(
-            <div className={open ? "drawer open" : "drawer"}>
+            <div className= "drawer">
                 <UserDrawer setOpen={setOpen}/>
             </div>
             )}
