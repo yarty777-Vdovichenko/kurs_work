@@ -1,5 +1,5 @@
-import { Box, Button, IconButton, InputAdornment, MenuItem, Select, TextField } from "@mui/material";
-import back2 from "../assets/back2.jpg"
+import { Box, Button, IconButton, MenuItem, Select, TextField } from "@mui/material";
+import back2 from "../../assets/back2.jpg"
 import {} from "@mui/icons-material"
 import { useState } from "react";
 import VisibilityIcon from '@mui/icons-material/Visibility';
@@ -186,7 +186,7 @@ export default function Register()
                             
                             "&:hover":{backgroundColor:"#a27b18",color:"#fff"}
                         }}>
-                            {loading? "Завантаження...":"Увійти"}
+                            {loading? "Завантаження...":"Зареєструватися"}
                         </Button>
                         
                     </Box>

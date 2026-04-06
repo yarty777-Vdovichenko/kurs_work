@@ -1,5 +1,5 @@
 import { Box, Button, IconButton, TextField } from "@mui/material";
-import back2 from "../assets/back2.jpg"
+import back2 from "../../assets/back2.jpg"
 import {} from "@mui/icons-material"
 import { useState } from "react";
 import VisibilityIcon from '@mui/icons-material/Visibility';
