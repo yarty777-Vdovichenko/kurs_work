@@ -4,7 +4,7 @@ import {} from "@mui/icons-material"
 import { useState } from "react";
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-import { login } from "../api/api";
+import { login } from "../../api/api";
 import { useNavigate } from "react-router-dom";
 
 export default function Login()
@@ -23,7 +23,7 @@ export default function Login()
             setLoading(true);
             setError("");
 
-            const response = await login(email,password);
+            await login(email,password);
             
             navigate("/srm/dashboard")
         }
