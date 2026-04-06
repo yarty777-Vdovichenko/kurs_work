@@ -1,27 +1,46 @@
 import {IconButton,TextField, } from "@mui/material";
 import { useEffect, useState } from "react";
-import UserDrawer from "../Components/UserDrawer.tsx";
-import "../styles/Base.css"
-import { deleteUser, getUsers } from "../api/api.ts";
+import UserDrawer from "../../Components/UserDrawer/UserDrawer.tsx";
+import styles from "./Users.module.css";
+import { deleteUser, getUsers } from "../../api/api.ts";
 import { Clear, Delete, FilterAlt, Refresh } from "@mui/icons-material";
 
+type User={
+    id:string;
+    name:string;
+    email:string;
+    role:string;
+}
+
 const selected={backgroundColor:"#52b57d"}
+
+
+
 export default function Users()
 {
     const [open,setOpen]=useState<boolean>(false);
     const [selectedUsers,setSelectedUsers]=useState<string[]>([])
-    const [users,setUsers]=useState([
-        {id:"1",name:"yarty",email:"yaroslav0908l@gmail.com",role:"User"},
-        {id:"2",name:"yarty",email:"yaroslav0908l@gmail.com",role:"User"},
-        {id:"3",name:"yarty",email:"yaroslav0908l@gmail.com",role:"User"},
-        {id:"4",name:"yarty",email:"yaroslav0908l@gmail.com",role:"User"},
-        {id:"5",name:"yarty",email:"yaroslav0908l@gmail.com",role:"User"},
-        {id:"6",name:"yarty",email:"yaroslav0908l@gmail.com",role:"User"},
-        {id:"7",name:"yarty",email:"yaroslav0908l@gmail.com",role:"User"},
-        {id:"8",name:"yarty",email:"yaroslav0908l@gmail.com",role:"User"},
-        {id:"9",name:"yarty",email:"yaroslav0908l@gmail.com",role:"User"},
-        {id:"10",name:"yarty",email:"yaroslav0908l@gmail.com",role:"User"},
-    ])
+    const [users,setUsers]=useState<User[]>([])
+    const [filterUsers,setFilterUsers]=useState<User[]>([])
+    const [openFilter,setOpenFilter]=useState<boolean>(false);
+    const [filterRole,setFilterRole]=useState<string>("All");
+    const [filterSort,setFilterSort]=useState<string>("None");
+    const [search,setSearch]=useState<string>("")
+
+    useEffect(()=>{
+        let result = filterRole === "All" ? [...users] : users.filter(user => user.role === filterRole);
+
+        if (filterSort !== "None") {
+            if(filterSort==="Name"){
+                result.sort((a,b)=>a.name.localeCompare(b.name));
+            }else
+            {
+                result.sort((a,b)=>a.email.localeCompare(b.email));
+            }
+        }
+
+        setFilterUsers(result);
+    },[filterRole,users,filterSort])
 
     async function loadUser(){
         try{
@@ -57,18 +76,26 @@ export default function Users()
         }
     }
 
+    function searchUser(){
+        if(!search)
+            return;
+        const newUsers = filterUsers.filter(user=>user.name.includes(search)||user.email.includes(search))
+
+        setFilterUsers(newUsers);
+    }
+
     return(
-        <div className="mainUser">
-            <div className="search" id="search">
-                <TextField placeholder="Пошук..." sx={{backgroundColor:"white", borderColor:"#9ACFB1",flex:1,borderRadius:1}}></TextField>
-                <IconButton>
+        <div className={styles.mainUser}>
+            <div className={styles.search} id="search">
+                <TextField value={search} onChange={(e)=>{setSearch(e.target.value)}} placeholder="Пошук за ім'ям/ел. поштою..." sx={{backgroundColor:"white", borderColor:"#9ACFB1",flex:1,borderRadius:1}}></TextField>
+                <IconButton onClick={searchUser}>
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="white" 
                     d="M9.5 16q-2.725 0-4.612-1.888T3 9.5t1.888-4.612T9.5 3t4.613 1.888T16 9.5q0 1.1-.35 2.075T14.7 13.3l5.6 
                     5.6q.275.275.275.7t-.275.7t-.7.275t-.7-.275l-5.6-5.6q-.75.6-1.725.95T9.5 16m0-2q1.875 0 3.188-1.312T14 
                     9.5t-1.312-3.187T9.5 5T6.313 6.313T5 9.5t1.313 3.188T9.5 14"/></svg>
                  </IconButton>
-                    <IconButton><FilterAlt sx={{fontSize:"28px",color:"white"}}/></IconButton>
-                 <IconButton>
+                    <IconButton onClick={()=>{!openFilter?setOpenFilter(true):setOpenFilter(false);setFilterSort("None");setFilterRole("All");}}><FilterAlt sx={{fontSize:"28px",color:"white"}}/></IconButton>
+                 <IconButton onClick={()=>{setSearch("");setFilterUsers(users);}}>
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="white" 
                     d="m8.4 17l3.6-3.6l3.6 3.6l1.4-1.4l-3.6-3.6L17 8.4L15.6 7L12 10.6L8.4 7L7 
                     8.4l3.6 3.6L7 15.6zm3.6 5q-2.075 0-3.9-.788t-3.175-2.137T2.788 15.9T2 
@@ -77,12 +104,42 @@ export default function Users()
                     12t-2.325-5.675T12 4T6.325 6.325T4 12t2.325 5.675T12 20m0-8"/></svg>
                  </IconButton>
             </div>
+            {openFilter &&
+            <div className={styles.filterMenu}>
+                <p>Role</p>
+                <div className={styles.choose}>
+                    <div className={`${styles.variant} ${filterRole === "All" ? styles.selected : ""}`} 
+                    onClick={() => setFilterRole("All")}>All</div>
+                    <div className={`${styles.variant} ${filterRole === "Meneger" ? styles.selected : ""}`}  
+                    onClick={() => setFilterRole("Meneger")}>Meneger</div>
+                    <div className={`${styles.variant} ${filterRole === "Admin" ? styles.selected : ""}`} 
+                    onClick={() => setFilterRole("Admin")}>Admin</div>
+                    <div className={`${styles.variant} ${filterRole === "User" ? styles.selected : ""}`} 
+                    onClick={() => setFilterRole("User")}>User</div>
+                </div>
+                <p>Сортування</p>
+                <div className={styles.choose}>
+                    <div className={`${styles.variant} ${filterSort === "None" ? styles.selected : ""}`}  
+                    onClick={()=>setFilterSort("None")}>
+                        Без сортування
+                    </div>
+                    <div className={`${styles.variant} ${filterSort === "Name" ? styles.selected : ""}`}  
+                    onClick={()=>setFilterSort("Name")}>
+                        За ім'ям
+                    </div>
+                    <div className={`${styles.variant} ${filterSort === "Email" ? styles.selected : ""}`}  
+                    onClick={()=>setFilterSort("Email")}>
+                        За ел. поштою
+                    </div>
+                </div>
+            </div>
+            }
             {selectedUsers.length === 0 && 
-            <div className="simple">
-                <p>Центр управління користувачами: всі, хто підключений до нашого сервісу, в одному місці</p>
+            <div className={styles.simple}>
+                <p><i>Центр управління користувачами: всі, хто підключений до нашого сервісу, в одному місці</i></p>
             </div>}
             {selectedUsers.length > 0 && 
-            <div className="menu">
+            <div className={styles.menu}>
                 <p>Вибрано користувачів: {selectedUsers.length}</p>
                 <div>
                     <IconButton onClick={()=>deleteSelected()}><Delete sx={{fontSize:"32px",color:"white"}}/></IconButton>
@@ -91,26 +148,26 @@ export default function Users()
                 </div>
             </div>
             }
-            <div className="cardsUser">
-                {users.map(user=>{
+            <div className={styles.cardsUser}>
+                {filterUsers.map(user=>{
                     return(
-                        <div key={user.id} className={selectedUsers.includes(user.id)? "cardUser selected": "cardUser"} onClick={()=>{changeSelect(user.id),setOpen(false)}}>
-                            <div className="dataUser">
+                        <div key={user.id} className={`${styles.cardUser} ${selectedUsers.includes(user.id) ? styles.selected : ""}`} onClick={()=>{changeSelect(user.id);setOpen(false)}}>
+                            <div className={styles.dataUser}>
                                 <span>ID: {user.id}</span>
-                                <span className="roleUser">Role: {user.role}</span>
+                                <span className={styles.roleUser}>Role: {user.role}</span>
                                 <span>Name: {user.name}</span> 
                                 <span>Email: {user.email}</span>
                             </div>
-                            <div className="selectionUser" style={selectedUsers.includes(user.id)?selected:{}}> </div>
+                            <div className={styles.selectionUser} style={selectedUsers.includes(user.id)?selected:{}}> </div>
                         </div>
                     )
                 })}
             </div>
-            <div className={!open?"iconsUsers":"iconsUsers open"}>
+            <div className={`${styles.iconsUsers} ${open ? styles.open : ""}`}>
                 <IconButton
                 onClick={()=>window.scrollTo({ top: 0, behavior: "smooth" })}
                 sx={{
-                    backgroundColor:"#2a9f5d",
+                    backgroundColor:"#ec813f",
                     color:"white",
                     transition:"0.3s",
 
@@ -122,7 +179,7 @@ export default function Users()
                 <IconButton 
                 onClick={()=>setOpen(true)}
                 sx={{
-                    backgroundColor:"#2a9f5d",
+                    backgroundColor:"#ec813f",
                     color:"white",
                     transition:"0.3s",
 
@@ -134,7 +191,7 @@ export default function Users()
                 <IconButton 
                 onClick={()=>loadUser()}
                 sx={{
-                    backgroundColor:"#2a9f5d",
+                    backgroundColor:"#ec813f",
                     color:"white",
                     transition:"0.3s",
 
@@ -143,10 +200,13 @@ export default function Users()
                 </IconButton>
             </div>
             {open&&(
-            <div className= "drawer">
+            <div className= {styles.drawer}>
                 <UserDrawer setOpen={setOpen}/>
             </div>
             )}
         </div>
     )
 }
+//пошук
+//сортування при виборі міняє колір
+//українською помилки

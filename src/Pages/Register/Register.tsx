@@ -4,7 +4,7 @@ import {} from "@mui/icons-material"
 import { useState } from "react";
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-import { register } from "../api/api";
+import { register } from "../../api/api";
 import { useNavigate } from "react-router-dom";
 
 export default function Register()
