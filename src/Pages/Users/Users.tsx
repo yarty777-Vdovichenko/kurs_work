@@ -3,14 +3,9 @@ import { useEffect, useState } from "react";
 import UserDrawer from "../../Components/UserDrawer/UserDrawer.tsx";
 import styles from "./Users.module.css";
 import { deleteUser, getUsers } from "../../api/api.ts";
-import { Clear, Delete, FilterAlt, Refresh } from "@mui/icons-material";
-
-type User={
-    id:string;
-    name:string;
-    email:string;
-    role:string;
-}
+import { Clear, Delete, Edit, FilterAlt, Refresh } from "@mui/icons-material";
+import ModalUser from "../../Components/ModalUser/ModalUser.tsx";
+import {type Role, type User} from "../../types/types.ts"
 
 const selected={backgroundColor:"#52b57d"}
 
@@ -25,7 +20,10 @@ export default function Users()
     const [openFilter,setOpenFilter]=useState<boolean>(false);
     const [filterRole,setFilterRole]=useState<string>("All");
     const [filterSort,setFilterSort]=useState<string>("None");
-    const [search,setSearch]=useState<string>("")
+    const [search,setSearch]=useState<string>("");
+    const [modalOpen,setModalOpen]=useState<boolean>(false);
+    const [currentRole,setCurrentRole]=useState<Role>("");
+    const [id,setId]=useState<string>("");
 
     useEffect(()=>{
         let result = filterRole === "All" ? [...users] : users.filter(user => user.role === filterRole);
@@ -55,7 +53,7 @@ export default function Users()
 
     useEffect(()=>{
         loadUser();
-    },[])
+    },[modalOpen])
 
     function changeSelect(id:string){
         setSelectedUsers(prev=> prev.includes(id) ? prev.filter(u=>u!==id) : [...prev,id])
@@ -71,8 +69,9 @@ export default function Users()
             setUsers(prev => prev.filter(user=> !selectedUsers.includes(user.id)))
             setSelectedUsers([]);
         }
-        catch(error){
-            console.log(error)
+        catch(error:any){
+            console.log(error);
+            alert(error)
         }
     }
 
@@ -94,7 +93,6 @@ export default function Users()
                     5.6q.275.275.275.7t-.275.7t-.7.275t-.7-.275l-5.6-5.6q-.75.6-1.725.95T9.5 16m0-2q1.875 0 3.188-1.312T14 
                     9.5t-1.312-3.187T9.5 5T6.313 6.313T5 9.5t1.313 3.188T9.5 14"/></svg>
                  </IconButton>
-                    <IconButton onClick={()=>{!openFilter?setOpenFilter(true):setOpenFilter(false);setFilterSort("None");setFilterRole("All");}}><FilterAlt sx={{fontSize:"28px",color:"white"}}/></IconButton>
                  <IconButton onClick={()=>{setSearch("");setFilterUsers(users);}}>
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="white" 
                     d="m8.4 17l3.6-3.6l3.6 3.6l1.4-1.4l-3.6-3.6L17 8.4L15.6 7L12 10.6L8.4 7L7 
@@ -103,6 +101,8 @@ export default function Users()
                     12t-.788 3.9t-2.137 3.175t-3.175 2.138T12 22m0-2q3.35 0 5.675-2.325T20 
                     12t-2.325-5.675T12 4T6.325 6.325T4 12t2.325 5.675T12 20m0-8"/></svg>
                  </IconButton>
+                    <IconButton onClick={()=>{!openFilter?setOpenFilter(true):setOpenFilter(false);setFilterSort("None");setFilterRole("All");}}><FilterAlt sx={{fontSize:"28px",color:"white"}}/></IconButton>
+                 
             </div>
             {openFilter &&
             <div className={styles.filterMenu}>
@@ -158,7 +158,18 @@ export default function Users()
                                 <span>Name: {user.name}</span> 
                                 <span>Email: {user.email}</span>
                             </div>
-                            <div className={styles.selectionUser} style={selectedUsers.includes(user.id)?selected:{}}> </div>
+                            <div className={styles.selectionUser} style={selectedUsers.includes(user.id)?selected:{}}>
+                                <IconButton sx={{display:"flex",justifyContent:"center",height:"100%"}} 
+                                onClick={
+                                    (e) => {e.stopPropagation();
+                                    setId(user.id);
+                                    setCurrentRole(user.role);
+                                    setModalOpen(true);
+                                }
+                                }>
+                                    <Edit sx={{color:"white",}}/>
+                                </IconButton>
+                            </div>
                         </div>
                     )
                 })}
@@ -204,9 +215,11 @@ export default function Users()
                 <UserDrawer setOpen={setOpen}/>
             </div>
             )}
+            {modalOpen &&
+                <ModalUser role={currentRole} id={id} setOpen={setModalOpen}>
+                    
+                </ModalUser>
+            }
         </div>
     )
 }
-//пошук
-//сортування при виборі міняє колір
-//українською помилки

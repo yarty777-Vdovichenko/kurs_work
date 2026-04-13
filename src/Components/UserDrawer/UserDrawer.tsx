@@ -3,11 +3,12 @@ import styles from "./UserDrawer.module.css";
 import { Close } from "@mui/icons-material"
 import { useState } from "react"
 import { postUser } from "../../api/api";
+import type { Role } from "../../types/types";
 
 export default function Drawer({setOpen}:{setOpen:(value:boolean)=>void}){
     const [email,setEmail]=useState<string>("");
     const [name,setName]=useState<string>("");
-    const [role,setRole]=useState<string>("");
+    const [role,setRole]=useState<Role>("");
     const [error,setError]=useState<string>("");
     const [created,setCreated]=useState<string>("");
 
@@ -60,7 +61,7 @@ export default function Drawer({setOpen}:{setOpen:(value:boolean)=>void}){
                     "&:hover":{backgroundColor:"#9b4e1f"}
                 }} onClick={()=>{setEmail("");setName("");setRole("");}}>Очистити</Button>
             </div>
-            {error && <Box sx={{color:"red"}}>{error}</Box>}
+            {error && <Box sx={{color:"white"}}>{error}</Box>}
             {created && <Box sx={{color:"#9ACFB1"}}>{created}</Box>}
         </div>
     )

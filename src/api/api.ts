@@ -1,4 +1,5 @@
 import axios from "axios";
+import type { Role } from "../types/types";
 
 const api = axios.create({baseURL:"https://localhost:7058/api",headers:{"Content-Type":"application/json"}});
 
@@ -69,7 +70,7 @@ export async function getUsers() {
 
 export async function postUser(name: string, email: string, role: string) {
     try {
-        const response = await api.post("/users", { name, email, password: "1111", role });
+        const response = await api.post("/users", { name, email, password: "111111", role });
         return response.data;
     } catch (error: any) {
         if (error.response) {
@@ -86,6 +87,18 @@ export async function deleteUser(id:string) {
         return responce.data;
     }
     catch(error:any){
+        if (error.response) {
+            throw error.response.data.message;
+        } else {
+            throw "Server error";
+        }
+    }
+}
+export async function patchUser(id: string, data: { name?: string; email?: string; role?: Role; password?: string }) {
+    try {
+        const response = await api.patch(`/users/${id}`, data);
+        return response.data;
+    } catch (error: any) {
         if (error.response) {
             throw error.response.data.message;
         } else {

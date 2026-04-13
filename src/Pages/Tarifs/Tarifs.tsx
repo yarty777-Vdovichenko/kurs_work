@@ -3,15 +3,6 @@ import { Box, Button, IconButton,TextField, } from "@mui/material";
 import { useEffect, useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 
-/*
-назва
-абонплата
-обсяг інтернету
-хвилини / SMS
-дод можливості
- */
-
-
 export default function Tarifs()
 {
     const [searchText,setSearchText]=useState('');
