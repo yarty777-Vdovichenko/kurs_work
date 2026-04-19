@@ -1,10 +1,10 @@
 import { Box, Button, IconButton, TextField } from "@mui/material";
-import back2 from "../assets/back2.jpg"
+import back2 from "../../assets/back2.jpg"
 import {} from "@mui/icons-material"
 import { useState } from "react";
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-import { login } from "../../api/api";
+import { login } from "../../api/auth.api";
 import { useNavigate } from "react-router-dom";
 
 export default function Login()

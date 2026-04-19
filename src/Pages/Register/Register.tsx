@@ -1,10 +1,10 @@
-import { Box, Button, IconButton, InputAdornment, MenuItem, Select, TextField } from "@mui/material";
-import back2 from "../assets/back2.jpg"
+import { Box, Button, IconButton, MenuItem, Select, TextField } from "@mui/material";
+import back2 from "../../assets/back2.jpg"
 import {} from "@mui/icons-material"
 import { useState } from "react";
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-import { register } from "../../api/api";
+import { register } from "../../api/auth.api";
 import { useNavigate } from "react-router-dom";
 
 export default function Register()
@@ -34,13 +34,13 @@ export default function Register()
 
         if(name.length<4)
         {
-            setError("Short name");
+            setError("Коротке ім'я");
             return;
         }
 
         if(password.length<8)
         {
-            setError("Short name");
+            setError("Короткий пароль");
             return;
         }
 
@@ -159,8 +159,8 @@ export default function Register()
                         value={role}
                         onChange={(e)=>setRole(e.target.value)}>
                         <MenuItem value="Meneger">Meneger</MenuItem>
-                        <MenuItem value="Admin">Operator</MenuItem>
-                        <MenuItem value="User">Admin</MenuItem>
+                        <MenuItem value="Admin">Admin</MenuItem>
+                        <MenuItem value="User">User</MenuItem>
                     </Select>
                     {error && 
                         <Box sx={{color:"red",display:"flex",justifyContent:"center",fontSize:"24px"}}>
@@ -186,7 +186,7 @@ export default function Register()
                             
                             "&:hover":{backgroundColor:"#a27b18",color:"#fff"}
                         }}>
-                            {loading? "Завантаження...":"Увійти"}
+                            {loading? "Завантаження...":"Зареєструватися"}
                         </Button>
                         
                     </Box>

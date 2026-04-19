@@ -1,6 +1,6 @@
 import { Avatar, Box } from "@mui/material";
 import { Link } from "react-router-dom";
-import logo from "../assets/crm.png";
+import logo from "../../assets/crm.png";
 
 export default function Header({color}:{color?:string}) {
   return (
