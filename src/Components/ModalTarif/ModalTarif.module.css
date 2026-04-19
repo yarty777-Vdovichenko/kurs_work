@@ -1,0 +1,23 @@
+.all{
+    position:fixed;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.modal{
+    padding: 50px;
+    background-color: #3C7B56;
+    border-radius: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 10px;
+    box-shadow: 0px 0px 24px rgba(0,0,0,1);
+}
+.buttons{
+    display: flex;
+    gap: 10px;
+}

@@ -1,6 +1,6 @@
 import { Avatar, Box, Button,  Typography } from "@mui/material";
-import back1 from "../assets/back1.jpg";
-import logo from "../assets/crm.png";
+import back1 from "../../assets/back1.jpg";
+import logo from "../../assets/crm.png";
 import { useNavigate } from "react-router-dom";
 
 export default function Home()
