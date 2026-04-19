@@ -2,7 +2,7 @@ import { Box, Button, IconButton, MenuItem, Select, TextField } from "@mui/mater
 import styles from "./UserDrawer.module.css";
 import { Close } from "@mui/icons-material"
 import { useState } from "react"
-import { postUser } from "../../api/api";
+import { postUser } from "../../api/users.api";
 import type { Role } from "../../types/types";
 
 export default function Drawer({setOpen}:{setOpen:(value:boolean)=>void}){

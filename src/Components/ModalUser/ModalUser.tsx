@@ -2,7 +2,7 @@ import { Button, MenuItem, Select } from "@mui/material"
 import styles from "./ModalUser.module.css"
 import  { type Role,type ModalUserProps } from "../../types/types"
 import { useState } from "react"
-import { patchUser } from "../../api/api";
+import { patchUser } from "../../api/users.api";
 
 
 export default function ModalUser({role,id,setOpen}:ModalUserProps){
