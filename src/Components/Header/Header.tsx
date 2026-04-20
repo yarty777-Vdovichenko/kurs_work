@@ -20,10 +20,6 @@ export default function Header({color}:{color?:string}) {
       }}
     >
       <Avatar src={logo} sx={{ width: 30, height: 30 ,backgroundColor:"white", padding:"4px"}} />
-      <Link to="/" style={{ display:"flex", alignItems:"center", gap: 0.5, textDecoration:"none", color:"white" }}>Home</Link>
-      <Link to="/login" style={{ textDecoration:"none", color:"white" }}>Login</Link>
-      <Link to="/register" style={{ textDecoration:"none", color:"white" }}>Register</Link>
-      <Link to="/srm/dashboard" style={{ textDecoration:"none", color:"white" }}>Dashboard</Link>
     </Box>
   );
 }
