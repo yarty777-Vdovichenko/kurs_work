@@ -7,7 +7,6 @@ import Login from "../../Pages/Login/Login"
 import Dashboard from '../../Pages/Dashboard/Dashboard';
 import Tarifs from '../../Pages/Tarifs/Tarifs';
 import Users from '../../Pages/Users/Users';
-import Charts from '../../Pages/Charts/Charts';
 import Abonents from '../../Pages/Abonents/Abonents';
 
 export default function Router() {
@@ -24,7 +23,6 @@ export default function Router() {
           <Route path='users' element={<Users/>}/>
           <Route path='abonents' element={<Abonents/>}/>
           <Route path='tarifs' element={<Tarifs/>}/>
-          <Route path='charts' element={<Charts/>}/>
         </Route>
       </Routes>
     </BrowserRouter>

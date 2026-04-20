@@ -27,13 +27,3 @@ export default function Header({color}:{color?:string}) {
     </Box>
   );
 }
-
-
-/*
-Домашня сторінка / Dashboard	Dashboard	import DashboardIcon from '@mui/icons-material/Dashboard';
-Клієнти / Контакти	Person, People	import PeopleIcon from '@mui/icons-material/People';
-Продажі / Sales	AttachMoney, MonetizationOn	import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
-Завдання / Tasks	Checklist, Assignment	import AssignmentIcon from '@mui/icons-material/Assignment';
-Повідомлення / Messages	Mail, Chat	import MailIcon from '@mui/icons-material/Mail';
-Налаштування / Settings	Settings	import SettingsIcon from '@mui/icons-material/Settings';
-Звіти / Analytics	BarChart, Insights	import BarChartIcon from '@mui/icons-material/BarChart'; */
