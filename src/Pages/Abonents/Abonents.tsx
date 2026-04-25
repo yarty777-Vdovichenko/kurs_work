@@ -1,174 +1,278 @@
-import { Add, Cancel, Close, Delete, Search, SimCard } from "@mui/icons-material";
-import { Box, Button, IconButton,TextField, } from "@mui/material";
+import { IconButton, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
-import { DataGrid } from "@mui/x-data-grid";
+import { Clear, Delete, Edit, FilterAlt, Refresh } from "@mui/icons-material";
+import { type Sub } from "../../types/types.ts";
+import { deleteSub, getSub } from "../../api/subscriber.api.ts";
+import styles from "./Abonents.module.css";
 
-type Tarif ={
-    id:string,
-    name:string,
-    internet_capacity:number,
-    minutes:number,
-    additional:string,
-    price:number
-}
+export default function Abonents() {
+    const [open, setOpen] = useState(false);
+    const [selectedAbonents, setSelectedAbonents] = useState<string[]>([]);
+    const [abonents, setAbonents] = useState<Sub[]>([]);
+    const [filterAbonents, setFilterAbonents] = useState<Sub[]>([]);
+    const [openFilter, setOpenFilter] = useState(false);
+    const [filterSort, setFilterSort] = useState<string>("None");
+    const [search, setSearch] = useState("");
+    const [modalOpen, setModalOpen] = useState(false);
+    const [editedAbonent, setEditedAbonent] = useState<Sub | null>(null);
+    const [currentPage,newCurrentPage]=useState<number>(1);
+    const [totalPages,setTotalPages]=useState<number>(1);
 
-type SimStatus="ACTIVE"|"BLOCKED"
+    useEffect(() => {
+        let result = [...abonents];
 
-type SimCard ={
-  id: string;
-  simNumber: string;
-  status: SimStatus;
-  createdAt: string;
-  tarif: Tarif;
-}
+        if (search) {
+            const searchLower = search.toLowerCase();
+            result = result.filter(ab =>
+                (ab.fullName ?? "").toLowerCase().includes(searchLower)
+            );
+        }
 
-type Subscriber ={
-  id: string;
-  fullName: string;
-  createdAt: string;
-  sims: SimCard[];
-}
+        if (filterSort === "Name") {
+            result.sort((a, b) => a.fullName.localeCompare(b.fullName));
+        } else if (filterSort === "Date") {
+            result.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+        }
 
-export default function Abonents()
-{
-    const [curentId,setCurrentId]=useState("");
-    const [searchText,setSearchText]=useState('');
-    const [open,setOpen]=useState(false);
-    const [openSims,setOpenSims]=useState(false);
-    const [dataTarif,setDataTarif]=useState<Tarif[]>([ 
-        { id: "1", name: "OK", internet_capacity: 20, minutes: 3000,additional:"Безкоштовні дзвінки за кордон",price:450},
-        { id: "2", name: "SUPER", internet_capacity: 30, minutes: 6000,additional:"Безкоштовні дзвінки за кордон",price:250},
-    ])  
-    const [dataSubscriber,setDataSubscriber]=useState<Subscriber[]>([ 
-        { id: "1", fullName: "Абонент Абонент Абонент", createdAt: new Date().toISOString(),sims:[{id:"1",simNumber:"3800000000",status:"ACTIVE",createdAt:new Date().toISOString(),tarif:dataTarif[0]}]},
-        { id: "2", fullName: "Абонент Абонент Абонент", createdAt: new Date().toISOString(),sims:[{id:"2",simNumber:"3800000000",status:"ACTIVE",createdAt:new Date().toISOString(),tarif:dataTarif[0]}]},
-    ])
-    const columnsSubscriber=[
-        {field: "fullName", headerName: "Імʼя",flex: 1},
-        { 
-        field: "createdAt", 
-        headerName: "Дата створення", 
-        flex: 1,
-        renderCell: (params: any) => (
-        <span>{new Date(params.value).toLocaleDateString('uk-UA', {
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric'
-        })}</span>
-        )},
-        {field: "viewSims",headerName: "",renderCell: (params:any) => 
-            <SimCard  onClick={()=>{setSelectedSis(params.row.sims);setOpenSims(true);}} sx={{"&:hover":{cursor:"pointer"}}} >
-            </SimCard>,width:50,sortable:false,filterable:false},
-        {field: "addSims",headerName: "",renderCell: (params:any) => 
-            <Add  onClick={()=>{setCurrentId(params.row.id);}} sx={{"&:hover":{cursor:"pointer"}}} >
-            </Add>,width:50,sortable:false,filterable:false},
-        {field: "delete",headerName: "",renderCell: (params:any) => 
-            <Delete  onClick={()=>deleteByIdSubscriber(params.row.id)} sx={{"&:hover":{cursor:"pointer"}}} >
-            </Delete>,width:50,sortable:false,filterable:false},     
-    ] 
-    const columnsSis=[
-        {field:"simNumber",headerName:"Номер сімки",flex:1},
-        {field:"status",headerName:"Статус",flex:1},
-        {field:"createdAt",headerName:"Дата створення",flex:1,
-        renderCell: (params: any) => (
-        <span>{new Date(params.value).toLocaleDateString('uk-UA', {
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric'
-        })}</span>
-        )},
-        {field:"tarif",headerName:"Тариф",flex:1,
-        renderCell: (params: any) => (
-        <span>
-            {params.row.tarif?.name}
-        </span>
-        )},
-    ]
-    const [selectedSis,setSelectedSis]=useState<SimCard[]>([]);
-    useEffect(()=>{setfilteredRowsSubscriber([...dataSubscriber])},[dataSubscriber])
+        setFilterAbonents(result);
+    }, [abonents, filterSort, search]);
 
-    const [filteredRowsSubscriber,setfilteredRowsSubscriber]=useState([...dataSubscriber]);
+    async function loadAbonents() {
+        try {
+            const response = await getSub(currentPage);
+            setAbonents(response.items);
+            setTotalPages(response.totalPages);
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
-    
-function deleteByIdSubscriber(id:string)
-{
-    const deletee= dataSubscriber.filter(dat => dat.id !== id)
-    setDataSubscriber(deletee);
-    setfilteredRowsSubscriber(deletee);
-}
+    useEffect(() => {
+        loadAbonents();
+    }, [currentPage]);
 
-function lookForData() {
-    const newFilteredRows = dataSubscriber.filter(
-        (row) => 
-            row.fullName.toLowerCase().includes(searchText.toLowerCase()) ||
-            row.sims.some((sim) => 
-                sim.simNumber.toLowerCase().includes(searchText.toLowerCase())
-            )
+    function changeSelect(id: string) {
+        setSelectedAbonents(prev =>
+            prev.includes(id) ? prev.filter(t => t !== id) : [...prev, id]
+        );
+    }
+
+    async function deleteSelected() {
+        const isConfirmed = window.confirm(
+            "Ви впевнені, що хочете видалити вибраних абонентів?"
+        );
+
+        if (!isConfirmed) return;
+
+        try {
+            await Promise.all(selectedAbonents.map(id => deleteSub(id)));
+            setAbonents(prev => prev.filter(t => !selectedAbonents.includes(t.id)));
+            setSelectedAbonents([]);
+        } catch (error: any) {
+            console.log(error);
+            alert(error);
+        }
+    }
+
+    return (
+        <div className={styles.mainUser}>
+            <div className={styles.search}>
+                <TextField
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    placeholder="Пошук абонента..."
+                    sx={{ backgroundColor: "white", flex: 1, borderRadius: 1 }}
+                />
+
+                <IconButton onClick={() => setSearch("")}>
+                    <Clear sx={{ color: "white" }} />
+                </IconButton>
+
+                <IconButton onClick={() => {
+                    setOpenFilter(prev => !prev);
+                    setFilterSort("None");
+                }}>
+                    <FilterAlt sx={{ fontSize: "28px", color: "white" }} />
+                </IconButton>
+            </div>
+
+            {openFilter && (
+                <div className={styles.filterMenu}>
+                    <p>Сортування</p>
+                    <div className={styles.choose}>
+                        <div
+                            className={`${styles.variant} ${filterSort === "None" ? styles.selected : ""}`}
+                            onClick={() => setFilterSort("None")}
+                        >
+                            Без сортування
+                        </div>
+                        <div
+                            className={`${styles.variant} ${filterSort === "Name" ? styles.selected : ""}`}
+                            onClick={() => setFilterSort("Name")}
+                        >
+                            За іменем
+                        </div>
+                        <div
+                            className={`${styles.variant} ${filterSort === "Date" ? styles.selected : ""}`}
+                            onClick={() => setFilterSort("Date")}
+                        >
+                            За датою
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {selectedAbonents.length === 0 && (
+                <div className={styles.simple}>
+                    <p><i>Список абонентів</i></p>
+                </div>
+            )}
+
+            {selectedAbonents.length > 0 && (
+                <div className={styles.menu}>
+                    <p>Вибрано абонентів: {selectedAbonents.length}</p>
+                    <div>
+                        <IconButton onClick={deleteSelected}>
+                            <Delete sx={{ fontSize: "32px", color: "white" }} />
+                        </IconButton>
+
+                        <IconButton onClick={() => setSelectedAbonents([])}>
+                            <Clear sx={{ fontSize: "32px", color: "white" }} />
+                        </IconButton>
+                    </div>
+                </div>
+            )}
+
+            <div className={styles.cardsUser}>
+                {filterAbonents.map(ab => (
+                    <div
+                        key={ab.id}
+                        className={`${styles.cardUser} ${selectedAbonents.includes(ab.id) ? styles.selected : ""}`}
+                        onClick={() => changeSelect(ab.id)}
+                    >
+                        <div className={styles.innerData}>
+                            <div className={styles.dataUser}>
+                                <span>ID: {ab.id}</span>
+                                <span>Імʼя: {ab.fullName}</span>
+                                <span>Сімок: {ab.sims?.length ?? 0}</span>
+                                <span>
+                                    Дата створення:{" "}
+                                    {new Date(ab.createdAt).toLocaleDateString("uk-UA", {
+                                        day: "2-digit",
+                                        month: "2-digit",
+                                        year: "numeric",
+                                    })}
+                                </span>
+                            </div>
+                            
+                            <div
+                                className={styles.selectionUser}
+                                style={selectedAbonents.includes(ab.id) ? { backgroundColor: "#52b57d" } : {}}
+                            >
+                                <IconButton
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        setEditedAbonent(ab);
+                                        setModalOpen(true);
+                                    }}
+                                >
+                                    <Edit sx={{ color: "white" }} />
+                                </IconButton>
+                            </div>
+                        </div>
+                        <div className={styles.simcards}>
+                        {ab.sims.map(sim=>(
+                            <div className={styles.simCard}>
+                                <span>ID: {sim.id}</span>
+                                <span>Номер: {sim.simNumber}</span>
+                                <span>Статус: {sim.status}</span>
+                                <span>Створено: {new Date(sim.createdAt).toLocaleDateString("uk-UA", {
+                                        day: "2-digit",
+                                        month: "2-digit",
+                                        year: "numeric",
+                                    })}</span>
+                                <span>Тариф: {sim.tarifId}</span>
+                            </div>
+                        ))}
+                        </div>
+                    </div>
+                ))}
+            </div>
+
+            <div className={styles.pages}>
+                <IconButton
+                    disabled={currentPage === 1}
+                    onClick={() => newCurrentPage(p => p - 1)}
+                    sx={{ color: "white" }}
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                        <path fill="currentColor" d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6l6 6z"/>
+                    </svg>
+                </IconButton>
+
+                <span style={{ color: "white" }}>{currentPage} / {totalPages}</span>
+
+                <IconButton
+                    disabled={currentPage === totalPages}
+                    onClick={() => newCurrentPage(p => p + 1)}
+                    sx={{ color: "white" }}
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                        <path fill="currentColor" d="M8.59 16.59L13.17 12L8.59 7.41L10 6l6 6l-6 6z"/>
+                    </svg>
+                </IconButton>
+            </div>       
+
+            <div className={`${styles.iconsUsers} ${open ? styles.open : ""}`}>
+                <IconButton
+                    onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+                    sx={{
+                        backgroundColor: "#ec813f",
+                        color: "white",
+                        transition: "0.3s",
+                        "&:hover": { backgroundColor: "#26382e", color: "white" },
+                    }}
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                        <path fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m8 6l4-4l4 4m-4-4v20" />
+                    </svg>
+                </IconButton>
+                <IconButton
+                    onClick={() => setOpen(true)}
+                    sx={{
+                        backgroundColor: "#ec813f",
+                        color: "white",
+                        transition: "0.3s",
+                        "&:hover": { backgroundColor: "#26382e", color: "white" },
+                    }}
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                        <path fill="currentColor" d="M18 12.998h-5v5a1 1 0 0 1-2 0v-5H6a1 1 0 0 1 0-2h5v-5a1 1 0 0 1 2 0v5h5a1 1 0 0 1 0 2" />
+                    </svg>
+                </IconButton>
+                <IconButton
+                    onClick={() => loadAbonents()}
+                    sx={{
+                        backgroundColor: "#ec813f",
+                        color: "white",
+                        transition: "0.3s",
+                        "&:hover": { backgroundColor: "#26382e", color: "white" },
+                    }}
+                >
+                    <Refresh />
+                </IconButton>
+            </div>
+
+            {/* Drawer — заглушка, додаси пізніше */}
+            {open && (
+                <div className={styles.drawer}>
+                    {/* <AbonentDrawer setOpen={setOpen} /> */}
+                </div>
+            )}
+
+            {modalOpen && editedAbonent && (
+                    <>{/* тут буде модалка* */}</>
+            )}
+        </div>
     );
-    setfilteredRowsSubscriber(newFilteredRows);
-}
-
-
-    return(
-        <Box sx={{
-            backgroundColor:"#0B2E1C",
-            display:"flex",
-            flexDirection:"row",
-            flex:1,
-            minHeight:"calc(100vh - 50px)",
-            width: "100%",
-            pl:2,
-            gap:2,
-            pr: open ? "33%" : "0%",
-            
-        }}>
-            <Box sx={{flex:1 ,display:"flex",flexDirection:"column",py:2,pr:open ? 2 : 0,gap:2, width: "100%",}}>
-                <Box sx={{display:"flex"}}>
-                <TextField value={searchText} onChange={(e) => setSearchText(e.target.value)} sx=
-                {{
-                    flex:1,
-                    display:"flex",
-                    alignContent:"space-between",
-                    borderRadius:1,
-                    backgroundColor:"white",
-                    mr:2,
-                }}
-                placeholder="Пошук (за іменем/за номером)" InputProps={{
-                    endAdornment:
-                    <Box sx={{display:"flex",flexDirection:"row"}}>
-                        <IconButton onClick={lookForData}>
-                            <Search/>
-                        </IconButton>
-                        <IconButton onClick={()=>{setSearchText("");setfilteredRowsSubscriber([...dataSubscriber])}}>
-                            <Cancel/>
-                        </IconButton>
-                    </Box>}}/>
-                </Box>
-                <Box  sx={{flex:1,backgroundColor:"#1F4F34",borderRadius:"20px",p:1,mr:2,display:"flex"   }}>
-                    <DataGrid
-                    rows={filteredRowsSubscriber}
-                    columns={columnsSubscriber}
-                    sx={{borderRadius:"20px"}}
-                    />
-                    {openSims &&<>
-                        <DataGrid
-                        rows={selectedSis}
-                        columns={columnsSis}
-                        sx={{borderRadius:"20px",ml:2}}
-                        />
-                        <IconButton onClick={()=>setOpenSims(false)} sx={{position:"absolute",top:"140px",right:20,backgroundColor:"#ec813f",color:"white",width:"20px",height:"20px","&:hover":{backgroundColor:"#b75d24",color:"white"}}}><Close sx={{width:"20px",height:"20px"}}/></IconButton>
-                    </>}
-                </Box>
-                <Button sx=
-                {{
-                    borderRadius:"20px",
-                    backgroundColor:"#3C7B56",
-                    color:"white",
-                    py:1,
-                    "&:hover":{backgroundColor:"#479b6a"}
-                }} onClick={()=>{{setOpen(true)}}}
-                >Додати</Button>
-                </Box>
-        </Box>
-    )
 }

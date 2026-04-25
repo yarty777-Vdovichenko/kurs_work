@@ -11,7 +11,6 @@ export default function LeftPanel({open,setOpen}:{open:boolean;setOpen:(value:bo
     { text: "Користувачі", icon: <PersonOutline />,path:"users" },
     { text: "Тарифи", icon: <CreditCard />,path:"tarifs" },
     { text: "Абоненти", icon: <Group />,path:"abonents" },
-    { text: "Графіки", icon: <ShowChart /> ,path:"charts"},
   ];
 
   return (
