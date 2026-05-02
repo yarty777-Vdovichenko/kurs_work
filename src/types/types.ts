@@ -21,10 +21,20 @@ export type Sub = {
 export type Sim = {
     id: string;
     simNumber: string;
-    status: "active" | "blocked";
+    status: Status;
     createdAt: string;
     tarifId: string;
 }
+export type CreateSimPayload = {
+    status: Status;
+    tarifId: string;
+};
+
+export type CreateSubPayload = {
+    fullName: string;
+    sims?: CreateSimPayload[];
+};
+export type Status = "active" | "blocked"; 
 export type Role = "Meneger"|"Admin"|"User"|"";
 export type PagedResult<T> = {
     items: T[];
@@ -41,4 +51,20 @@ export type ModalUserProps = {
 export type ModalTarifProps = {
     tarif?:Tarif;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>
+}
+export type ModalSubProps = {
+    sub: Sub,
+    setOpen: React.Dispatch<React.SetStateAction<boolean>>
+    onSuccess?: () => void
+}
+export type ModalAddSimProps = {
+    subId:string,
+    setOpen:React.Dispatch<React.SetStateAction<boolean>>
+    onSuccess?: () => void
+}
+export type ModalEditSimProps = {
+    subId:string,
+    simId:string,
+    setOpen:React.Dispatch<React.SetStateAction<boolean>>
+    onSuccess?: () => void
 }

@@ -197,17 +197,32 @@ span:nth-child(4){
     gap: 10px;
     display: grid;
     grid-template-columns: 1fr 1fr;
-
+    
 }
 .simCard{
     display: flex;
-    flex-direction: column;
-    gap: 10px;
+    justify-content: space-between;
     padding: 10px;
     border-radius: 20px;
     background-color: #29573d;
 }
+.addSim{
+    min-height: 160 px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    border-radius: 20px;
+    background-color: #29573d;
+}
+.simCard_data{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
 .pages{
     display: flex;
     justify-content: center;
+    position: sticky;
+    bottom: 0px;
 }

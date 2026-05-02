@@ -1,9 +1,14 @@
 import { IconButton, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
-import { Clear, Delete, Edit, FilterAlt, Refresh } from "@mui/icons-material";
-import { type Sub } from "../../types/types.ts";
-import { deleteSub, getSub } from "../../api/subscriber.api.ts";
+import { Add, Clear, Delete, Edit, FilterAlt, Refresh } from "@mui/icons-material";
+import { type Tarif, type Sub } from "../../types/types.ts";
+import { deleteSim, deleteSub, getSub } from "../../api/subscriber.api.ts";
 import styles from "./Abonents.module.css";
+import SubDrawer from "../../Components/AbonentDrawer/AbonentDrawer.tsx"
+import { getTarifs } from "../../api/tarifs.api.ts";
+import EditSubModale from "../../Components/ModalSubscriber/ModalSubscriber.tsx"
+import AddSimModale from "../../Components/ModalAddSim/ModalAddSim.tsx"
+import ModalEditSim from "../../Components/ModalEditSim/ModalEditSim.tsx";
 
 export default function Abonents() {
     const [open, setOpen] = useState(false);
@@ -13,10 +18,45 @@ export default function Abonents() {
     const [openFilter, setOpenFilter] = useState(false);
     const [filterSort, setFilterSort] = useState<string>("None");
     const [search, setSearch] = useState("");
+    const [curId,setCurId]=useState<string>("");
+    const [curSimId,setSimCurId]=useState<string>("");
+
     const [modalOpen, setModalOpen] = useState(false);
+    const [modalAddSimOpen, setAddSimModalOpen] = useState(false);
+    const [modalEditSimOpen, setModalEditSimOpen] = useState(false);
+
+
     const [editedAbonent, setEditedAbonent] = useState<Sub | null>(null);
     const [currentPage,newCurrentPage]=useState<number>(1);
     const [totalPages,setTotalPages]=useState<number>(1);
+
+    const [tarifs,setTarifs]=useState<Tarif[]>([]);
+
+    const [refresh,setRefresh]=useState<number>(0);
+
+    async function deleteSimm({subId,simId}:{subId:string,simId:string}) {
+        try {
+            await deleteSim({ subId, simId });
+            await loadAbonents();
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    async function loadTarifs(){
+        try{
+            const response = await getTarifs();
+            setTarifs(response)
+        }
+        catch(error:any)
+        {
+            console.log(error);
+        }
+    }
+
+    useEffect(()=>{
+        loadTarifs();
+    },[])
 
     useEffect(() => {
         let result = [...abonents];
@@ -49,7 +89,7 @@ export default function Abonents() {
 
     useEffect(() => {
         loadAbonents();
-    }, [currentPage]);
+    }, [currentPage,refresh]);
 
     function changeSelect(id: string) {
         setSelectedAbonents(prev =>
@@ -174,26 +214,74 @@ export default function Abonents() {
                                         e.stopPropagation();
                                         setEditedAbonent(ab);
                                         setModalOpen(true);
+                                        setRefresh(prev => prev+=1);
                                     }}
                                 >
                                     <Edit sx={{ color: "white" }} />
+                                </IconButton>
+                                <IconButton
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        setCurId(ab.id);
+                                        setAddSimModalOpen(true);
+                                        setRefresh(prev => prev+=1);
+                                    }}
+                                >
+                                    <Add sx={{color:"white"}}/>
                                 </IconButton>
                             </div>
                         </div>
                         <div className={styles.simcards}>
                         {ab.sims.map(sim=>(
                             <div className={styles.simCard}>
-                                <span>ID: {sim.id}</span>
-                                <span>Номер: {sim.simNumber}</span>
-                                <span>Статус: {sim.status}</span>
-                                <span>Створено: {new Date(sim.createdAt).toLocaleDateString("uk-UA", {
-                                        day: "2-digit",
-                                        month: "2-digit",
-                                        year: "numeric",
-                                    })}</span>
-                                <span>Тариф: {sim.tarifId}</span>
+                                <div className={styles.simCard_data}>
+                                    <span>ID: {sim.id}</span>
+                                    <span>Номер: {sim.simNumber}</span>
+                                    <span>Статус: {sim.status}</span>
+                                    <span>Створено: {new Date(sim.createdAt).toLocaleDateString("uk-UA", {
+                                            day: "2-digit",
+                                            month: "2-digit",
+                                            year: "numeric",
+                                        })}</span>
+                                    <span>Тариф: {tarifs?.find(tarif => tarif.id == sim.tarifId)?.name}</span>
+                                </div>
+                                <IconButton
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        setCurId(ab.id);
+                                        setSimCurId(sim.id);
+                                        setRefresh(prev => prev+=1);
+                                        setModalEditSimOpen(true);
+                                    }}
+                                >
+                                    <Edit sx={{ color: "white" }} />
+                                </IconButton>
+                                <IconButton
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    const subId=ab.id;
+                                    const simId=sim.id;
+                                    deleteSimm({subId,simId});
+                                    setRefresh(prev => prev+=1)
+                                    }}
+                                    >
+                                        <Delete sx={{color:"white"}}/>
+                                    </IconButton>
+                                
                             </div>
                         ))}
+                        <div className={styles.addSim}>
+                            <IconButton
+                            sx={{width:"100%",height:"100%",}}
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        setCurId(ab.id);
+                                        setAddSimModalOpen(true);
+                                    }}
+                                >
+                                    <Add sx={{color:"white"}}/>
+                                </IconButton>
+                        </div>
                         </div>
                     </div>
                 ))}
@@ -263,16 +351,21 @@ export default function Abonents() {
                 </IconButton>
             </div>
 
-            {/* Drawer — заглушка, додаси пізніше */}
             {open && (
                 <div className={styles.drawer}>
-                    {/* <AbonentDrawer setOpen={setOpen} /> */}
+                    <SubDrawer setOpen={setOpen} onSuccess={() => setRefresh(prev => prev + 1)}></SubDrawer>
                 </div>
             )}
 
-            {modalOpen && editedAbonent && (
-                    <>{/* тут буде модалка* */}</>
+            {modalAddSimOpen && (
+                <AddSimModale setOpen={setAddSimModalOpen} subId={curId} onSuccess={() => setRefresh(prev => prev + 1)}></AddSimModale>
             )}
+
+            {modalOpen && (
+                <EditSubModale setOpen={setModalOpen} sub={editedAbonent!} onSuccess={() => setRefresh(prev => prev + 1)}></EditSubModale>
+            )}
+            {modalEditSimOpen && 
+            <ModalEditSim setOpen={setModalEditSimOpen} simId={curSimId} subId={curId} onSuccess={() => setRefresh(prev => prev + 1)}></ModalEditSim>}
         </div>
     );
 }
