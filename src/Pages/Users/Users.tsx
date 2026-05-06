@@ -104,8 +104,8 @@ useEffect(() => {
                 <div className={styles.choose}>
                     <div className={`${styles.variant} ${filterRole === "All" ? styles.selected : ""}`} 
                     onClick={() => setFilterRole("All")}>All</div>
-                    <div className={`${styles.variant} ${filterRole === "Meneger" ? styles.selected : ""}`}  
-                    onClick={() => setFilterRole("Meneger")}>Meneger</div>
+                    <div className={`${styles.variant} ${filterRole === "Manager" ? styles.selected : ""}`}  
+                    onClick={() => setFilterRole("Manager")}>Meneger</div>
                     <div className={`${styles.variant} ${filterRole === "Admin" ? styles.selected : ""}`} 
                     onClick={() => setFilterRole("Admin")}>Admin</div>
                     <div className={`${styles.variant} ${filterRole === "User" ? styles.selected : ""}`} 

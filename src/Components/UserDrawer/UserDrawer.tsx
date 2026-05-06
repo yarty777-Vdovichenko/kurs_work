@@ -37,7 +37,7 @@ export default function Drawer({setOpen}:{setOpen:(value:boolean)=>void}){
             <Select sx={{backgroundColor:"white",width:"80%",borderRadius:1}}
                 value={role}
                 onChange={(e)=>setRole(e.target.value)}>
-                <MenuItem value="Meneger">Meneger</MenuItem>
+                <MenuItem value="Manager">Manager</MenuItem>
                 <MenuItem value="Admin">Admin</MenuItem>
                 <MenuItem value="User">User</MenuItem>
             </Select>

@@ -7,12 +7,42 @@ export type Tarif={
     price:number
 }
 export type User={
-    id:string;
-    name:string;
-    email:string;
-    role:Role;
+    id:string,
+    name:string,
+    email:string,
+    role:Role
 }
-export type Role = "Meneger"|"Admin"|"User"|"";
+export type Sub = {
+    id: string;
+    fullName: string;
+    createdAt: string;
+    sims: Sim[];
+}
+export type Sim = {
+    id: string;
+    simNumber: string;
+    status: Status;
+    createdAt: string;
+    tarifId: string;
+}
+export type CreateSimPayload = {
+    status: Status;
+    tarifId: string;
+};
+
+export type CreateSubPayload = {
+    fullName: string;
+    sims?: CreateSimPayload[];
+};
+export type Status = "active" | "blocked"; 
+export type Role = "Manager"|"Admin"|"User"|"";
+export type PagedResult<T> = {
+    items: T[];
+    totalCount: number;
+    page: number;
+    pageSize: number;
+    totalPages: number;
+}
 export type ModalUserProps = {
     role: Role;
     id: string;
@@ -21,4 +51,28 @@ export type ModalUserProps = {
 export type ModalTarifProps = {
     tarif?:Tarif;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>
+}
+export type ModalSubProps = {
+    sub: Sub,
+    setOpen: React.Dispatch<React.SetStateAction<boolean>>
+    onSuccess?: () => void
+}
+export type ModalAddSimProps = {
+    subId:string,
+    setOpen:React.Dispatch<React.SetStateAction<boolean>>
+    onSuccess?: () => void
+}
+export type ModalEditSimProps = {
+    subId:string,
+    simId:string,
+    setOpen:React.Dispatch<React.SetStateAction<boolean>>
+    onSuccess?: () => void
+}
+export type FilterStatus = Status | "";
+export type Stats = {
+    totalSubscribers: number;
+    activeSims: number;
+    blockedSims: number;
+    newSubscribersLast7Days: number;
+    totalTarifs: number;
 }

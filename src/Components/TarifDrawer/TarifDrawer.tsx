@@ -66,7 +66,7 @@ export default function TarifDrawer({setOpen}:{setOpen:(value:boolean)=>void}){
                 <Button sx={{
                     backgroundColor:"#c86426",flex:1,p:2,color:"white",transition:"0.3s",
                     "&:hover":{backgroundColor:"#9b4e1f"}
-                }} onClick={()=>{setName("");setAdditional("");setCapacity(0);setMinutes(0);setPrice(0);}}>Очистити</Button>
+                }} onClick={()=>{setName("");setAdditional("");setCapacity("");setMinutes("");setPrice("");}}>Очистити</Button>
             </div>
             {error && <Box sx={{color:"white"}}>{error}</Box>}
             {created && <Box sx={{color:"#9ACFB1"}}>{created}</Box>}
