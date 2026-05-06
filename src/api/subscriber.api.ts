@@ -1,5 +1,5 @@
 import { api } from "./api";
-import type { Sub,PagedResult, CreateSubPayload, Sim } from "../types/types";
+import type { Sub,PagedResult, CreateSubPayload, Sim, FilterStatus } from "../types/types";
 
 export async function postSub(data: CreateSubPayload): Promise<void> {
     try {
@@ -37,39 +37,9 @@ export async function getSub(page: number): Promise<PagedResult<Sub>> {
     }
     catch (error: any) {
         if (error.response) {
-            throw error.response.data.message;
+            throw new Error(error.response.data.message);
         }
         else {
-            throw "Server error"
-        }
-    }
-}
-
-export async function searchSubsByName(name:string):Promise<Sub[]>{
-    try{
-        const responce = await api.get(`subs/search?fullName=${name}`);
-        return responce.data;
-    }
-    catch(error:any){
-        if(error.response){
-            throw error.response.data.message
-        }else{
-            throw "Server error"
-        }
-    }
-}
-
-
-export async function filterSubs({ simStatus, tarifId }: { simStatus: string; tarifId: number }) {
-    try{
-        const responce = await api.get(`subs/filter?simStatus=${simStatus}&tarifId=${tarifId}`)
-        return responce.data
-    }
-    catch(error:any){
-        if(error.response){
-            throw error.response.data.message;
-        }
-        else{
             throw "Server error"
         }
     }
@@ -136,6 +106,41 @@ export async function getSimById({subId , simId}: {subId:string;simId:string}): 
             throw new Error(error.response.data.message);
         } else {
             throw "Server error";
+        }
+    }
+}
+
+export async function searchSub(page: number,fullName:string,phoneNumber:string): Promise<PagedResult<Sub>> {
+    try {
+        if(fullName!==""){
+            const responce = await api.get(`/subs/search?fullName=${fullName}&page=${page}`)
+            return responce.data;
+        }else{
+            const responce = await api.get(`/subs/search?number=${phoneNumber}&page=${page}`)
+            return responce.data;
+        }
+    }
+    catch (error: any) {
+        if (error.response) {
+            throw new Error(error.response.data.message);
+        }
+        else {
+            throw "Server error"
+        }
+    }
+}   
+
+export async function filterSub(page: number,simStatus:FilterStatus,tarifId:string): Promise<PagedResult<Sub>> {
+    try {
+        const responce = await api.get(`/subs/filter?simStatus=${simStatus}&tarifId=${tarifId}&page=${page}`)
+        return responce.data;
+    }
+    catch (error: any) {
+        if (error.response) {
+            throw new Error(error.response.data.message);
+        }
+        else {
+            throw "Server error"
         }
     }
 }

@@ -1,18 +1,23 @@
-import { Avatar, Box, Drawer } from "@mui/material";
-import { Dashboard, CreditCard, Group, ShowChart, ExitToApp, PersonOutline } from "@mui/icons-material";
+import { Box, Drawer } from "@mui/material";
+import { Dashboard, CreditCard, Group, ExitToApp, PersonOutline, BarChart } from "@mui/icons-material";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useRole } from "../../hooks/useRole";
 
 export default function LeftPanel({open,setOpen}:{open:boolean;setOpen:(value:boolean)=>void}) {
   const [clicked,setClicked]=useState("Дашборд");
- const navigate = useNavigate();
-  const menuItems = [
-    { text: "Дашборд", icon: <Dashboard />,path:"dashboard" },
-    { text: "Користувачі", icon: <PersonOutline />,path:"users" },
-    { text: "Тарифи", icon: <CreditCard />,path:"tarifs" },
-    { text: "Абоненти", icon: <Group />,path:"abonents" },
-  ];
+  const role = useRole();
 
+  const navigate = useNavigate();
+
+  const menuItems = [
+      { text: "Дашборд", icon: <Dashboard />, path: "dashboard" },
+      { text: "Тарифи", icon: <CreditCard />, path: "tarifs" },
+      { text: "Абоненти", icon: <Group />, path: "abonents" },
+      { text: "Користувачі", icon: <PersonOutline />, path: "users", roles: ["Admin", "Manager"] },
+      { text: "Аналітика", icon: <BarChart />, path: "charts", roles: ["Manager"] },
+  ].filter(item => !item.roles || item.roles.includes(role ?? ""));
+  
   return (
     <Drawer
       open={true}

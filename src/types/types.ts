@@ -35,7 +35,7 @@ export type CreateSubPayload = {
     sims?: CreateSimPayload[];
 };
 export type Status = "active" | "blocked"; 
-export type Role = "Meneger"|"Admin"|"User"|"";
+export type Role = "Manager"|"Admin"|"User"|"";
 export type PagedResult<T> = {
     items: T[];
     totalCount: number;
@@ -67,4 +67,12 @@ export type ModalEditSimProps = {
     simId:string,
     setOpen:React.Dispatch<React.SetStateAction<boolean>>
     onSuccess?: () => void
+}
+export type FilterStatus = Status | "";
+export type Stats = {
+    totalSubscribers: number;
+    activeSims: number;
+    blockedSims: number;
+    newSubscribersLast7Days: number;
+    totalTarifs: number;
 }

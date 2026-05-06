@@ -1,3 +1,5 @@
+import { useNavigate } from "react-router-dom";
+import type { Role } from "../types/types";
 import { api } from "./api";
 
 export async function register(name:string,role:string,email:string,password:string)
@@ -8,6 +10,7 @@ export async function register(name:string,role:string,email:string,password:str
 
     localStorage.setItem("accessToken",accessToken);
     localStorage.setItem("refreshToken", refreshToken);
+    localStorage.setItem("role",role);
 
     return userData;
     }
@@ -23,10 +26,11 @@ export async function register(name:string,role:string,email:string,password:str
 export async function login(email:string,password:string) {
     try{
         const responce = await api.post("/auth/login",{email,password});
-        const {accessToken,refreshToken, ...userData}=responce.data;
+        const {accessToken,refreshToken,role, ...userData}=responce.data;
 
         localStorage.setItem("accessToken",accessToken);
         localStorage.setItem("refreshToken", refreshToken);
+        localStorage.setItem("role",role);
 
         return userData;
     }

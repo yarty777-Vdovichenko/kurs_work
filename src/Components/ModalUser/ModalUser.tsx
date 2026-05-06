@@ -30,7 +30,7 @@ export default function ModalUser({role,id,setOpen}:ModalUserProps){
             <Select sx={{backgroundColor:"white",width:"80%",borderRadius:1}}
                 value={newRole}
                 onChange={(e)=>setNewRole(e.target.value)}>
-                <MenuItem value="Meneger">Meneger</MenuItem>
+                <MenuItem value="Manager">Meneger</MenuItem>
                 <MenuItem value="Admin">Admin</MenuItem>
                 <MenuItem value="User">User</MenuItem>
             </Select>
