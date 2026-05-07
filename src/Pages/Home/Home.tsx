@@ -33,7 +33,7 @@ export default function Home()
             <Box sx={{minHeight:"100vh",width:"100%", backgroundColor:"#0E1117",display:"flex",flexDirection:"column",paddingTop:"100px",}}>
                 
                 <Typography variant="h2" sx={{color:"#fff",pl:2,zIndex:90}}>
-                <span style={{ fontWeight: 600, color: "#FFB703" }}>Мобільний</span> <i>оператор</i>
+                Мобільний<i> оператор</i>
                 </Typography>
 
                 <Typography variant="h5" sx={{color:"#fff",pl:2,zIndex:90,fontWeight:"100"}}><i>Керуйте процесами, а не хаосом.</i></Typography>
@@ -77,7 +77,7 @@ export default function Home()
                             transition:"0.3s",
                             "&:hover":{bgcolor:"#956d07",color:"#fff"}
                         }}
-                        onClick={()=>navigate("/register")}>Зареєструватися</Button>
+                        onClick={()=>navigate("/register")}>Надіслати заявку</Button>
                     </Box>
                 </Box>
             </Box>

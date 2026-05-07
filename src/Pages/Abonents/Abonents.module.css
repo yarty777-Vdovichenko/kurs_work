@@ -90,13 +90,17 @@
     border-radius: 20px;
     color: white;
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
+    flex-direction: column;
+    
     min-height: 120px;
     cursor: pointer;
     transition: 0.3s;
     animation: menuApear 0.4s ease;
+}
+.innerData{
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
 }
 .cardUser.selected{
     background-color: #488261;
@@ -112,32 +116,35 @@
     flex-direction: column;
     gap:5px;
 }
-.dataUser span:first-child{
+span:first-child{
     font-size: 12px;
     opacity: 0.7;
 }
 
-.dataUser span:nth-child(2){
+span:nth-child(2){
     font-size: 18px;
     font-weight: 400;
 }
 
-.dataUser span:nth-child(3){
+span:nth-child(3){
     font-size: 18px;
     font-weight: 600;
 }
 
-.dataUser span:nth-child(4){
+span:nth-child(4){
     font-size: 14px;
     opacity: 0.8;
 }
+
+
+
 .selectionUser{
     flex: 0.1;
     height: 100%;
     background-color: #397252;
     align-self: center;
     transition: background-color 0.2s;
-    border-top-right-radius: 20px;border-bottom-right-radius: 20px;
+    border-top-right-radius: 20px;border-bottom-left-radius: 20px;
 }
 .iconsUsers{
     position: fixed;
@@ -183,4 +190,39 @@
     to{
         right: 0px;
     }
+}
+.simcards{
+    width: 100%;
+    padding: 10px;
+    gap: 10px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    
+}
+.simCard{
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    border-radius: 20px;
+    background-color: #29573d;
+}
+.addSim{
+    min-height: 160px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    border-radius: 20px;
+    background-color: #29573d;
+}
+.simCard_data{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.pages{
+    display: flex;
+    justify-content: center;
+    position: sticky;
+    bottom: 0px;
 }
