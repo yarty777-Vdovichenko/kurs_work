@@ -8,7 +8,7 @@ export default function Dashboard() {
 
   useEffect(()=>{
     statsInfo();
-  },[])
+  },[]) 
 
   async function statsInfo(){
     const stats = await getStats();

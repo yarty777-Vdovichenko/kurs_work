@@ -11,6 +11,7 @@ import Abonents from '../../Pages/Abonents/Abonents';
 import Charts from '../../Pages/Charts/Charts';
 import ForbiddenPage from '../../Pages/ForbiddenPage/ForbiddenPage';
 import PrivatRoute from '../../Components/PrivatRoute/PrivatRoute';
+import Application from '../../Pages/Application/Application'
 
 export default function Router() {
   return (
@@ -40,6 +41,11 @@ export default function Router() {
           <Route path='tarifs' element={
             <PrivatRoute alloweddRoles={["User", "Admin", "Manager"]}>
               <Tarifs/>
+            </PrivatRoute>
+          }/>
+          <Route path='applications' element={
+            <PrivatRoute alloweddRoles={["Manager"]}>
+              <Application/>
             </PrivatRoute>
           }/>
           <Route path='charts' element={
