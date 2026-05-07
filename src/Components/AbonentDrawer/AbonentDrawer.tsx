@@ -47,11 +47,11 @@ export default function SubscriberDrawer({setOpen,onSuccess}:{setOpen:(value:boo
 
     return(
         <div className={styles.drawerMain}>
-            <h3>Створити тариф</h3>
+            <h3>Додати абонента</h3>
             <p>ПІБ</p>
             <TextField value={name} onChange={(e)=>{setName(e.target.value)}}  placeholder="name" sx={{backgroundColor:"white",width:"80%",borderRadius:1}}>
             </TextField>
-            <Checkbox checked={checked} onChange={(e) => setChecked(e.target.checked)}></Checkbox>
+            <Checkbox sx={{color:"white"}} checked={checked} onChange={(e) => setChecked(e.target.checked)}></Checkbox><p>Створити сімку?    </p>
             {checked && 
             <div className={styles.addSimFields}>
                 <Select  sx={{backgroundColor:"white",width:"80%",borderRadius:1}} value={status} onChange={(e) => setStatus(e.target.value as "active" | "blocked")}>

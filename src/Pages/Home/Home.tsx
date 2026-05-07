@@ -77,7 +77,7 @@ export default function Home()
                             transition:"0.3s",
                             "&:hover":{bgcolor:"#956d07",color:"#fff"}
                         }}
-                        onClick={()=>navigate("/register")}>Зареєструватися</Button>
+                        onClick={()=>navigate("/register")}>Надіслати заявку</Button>
                     </Box>
                 </Box>
             </Box>
