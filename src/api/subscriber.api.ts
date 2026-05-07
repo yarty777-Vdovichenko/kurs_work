@@ -1,5 +1,5 @@
 import { api } from "./api";
-import type { Sub,PagedResult, CreateSubPayload, Sim, FilterStatus } from "../types/types";
+import type { Sub, PagedResult, CreateSubPayload, Sim, FilterStatus } from "../types/types";
 
 export async function postSub(data: CreateSubPayload): Promise<void> {
     try {
@@ -13,7 +13,6 @@ export async function postSub(data: CreateSubPayload): Promise<void> {
     }
 }
 
-
 export async function putSub(id: string, data: Sub): Promise<void> {
     try {
         await api.put(`/subs/${id}`, data);
@@ -26,21 +25,15 @@ export async function putSub(id: string, data: Sub): Promise<void> {
     }
 }
 
-
-
-
-
 export async function getSub(page: number): Promise<PagedResult<Sub>> {
     try {
-        const responce = await api.get(`/subs?page=${page}`)
-        return responce.data;
-    }
-    catch (error: any) {
+        const response = await api.get(`/subs?page=${page}`);
+        return response.data;
+    } catch (error: any) {
         if (error.response) {
             throw new Error(error.response.data.message);
-        }
-        else {
-            throw "Server error"
+        } else {
+            throw "Server error";
         }
     }
 }
@@ -57,12 +50,9 @@ export async function deleteSub(id: string): Promise<void> {
     }
 }
 
-
-
-
-export async function addSim({subId,tarifId}: {subId:string;tarifId:string}): Promise<void> {
+export async function addSim({ subId, tarifId }: { subId: string; tarifId: string }): Promise<void> {
     try {
-        await api.post(`/subs/${subId}/sims`, {tarifId});
+        await api.post(`/subs/${subId}/sims`, { tarifId });
     } catch (error: any) {
         if (error.response) {
             throw new Error(error.response.data.message);
@@ -72,7 +62,7 @@ export async function addSim({subId,tarifId}: {subId:string;tarifId:string}): Pr
     }
 }
 
-export async function deleteSim({subId , simId}: {subId:string;simId:string}): Promise<void> {
+export async function deleteSim({ subId, simId }: { subId: string; simId: string }): Promise<void> {
     try {
         await api.delete(`/subs/${subId}/sims/${simId}`);
     } catch (error: any) {
@@ -84,10 +74,16 @@ export async function deleteSim({subId , simId}: {subId:string;simId:string}): P
     }
 }
 
-export async function editSim({subId,simId,tarifId,status}: 
-    {subId:string;simId:string;tarifId:string;status:"active"|"blocked"}): Promise<void> {
+export async function editSim({
+    subId, simId, tarifId, status,
+}: {
+    subId: string;
+    simId: string;
+    tarifId: string;
+    status: "active" | "blocked";
+}): Promise<void> {
     try {
-        await api.put(`/subs/${subId}/sims/${simId}`, {status,tarifId});
+        await api.put(`/subs/${subId}/sims/${simId}`, { status, tarifId });
     } catch (error: any) {
         if (error.response) {
             throw new Error(error.response.data.message);
@@ -97,10 +93,10 @@ export async function editSim({subId,simId,tarifId,status}:
     }
 }
 
-export async function getSimById({subId , simId}: {subId:string;simId:string}): Promise<Sim> {
+export async function getSimById({ subId, simId }: { subId: string; simId: string }): Promise<Sim> {
     try {
-        const responce = await api.get(`/subs/${subId}/sims/${simId}`);
-        return responce.data;
+        const response = await api.get(`/subs/${subId}/sims/${simId}`);
+        return response.data;
     } catch (error: any) {
         if (error.response) {
             throw new Error(error.response.data.message);
@@ -110,37 +106,44 @@ export async function getSimById({subId , simId}: {subId:string;simId:string}): 
     }
 }
 
-export async function searchSub(page: number,fullName:string,phoneNumber:string): Promise<PagedResult<Sub>> {
+export async function searchSub(
+    page: number,
+    fullName: string,
+    phoneNumber: string
+): Promise<PagedResult<Sub>> {
     try {
-        if(fullName!==""){
-            const responce = await api.get(`/subs/search?fullName=${fullName}&page=${page}`)
-            return responce.data;
-        }else{
-            const responce = await api.get(`/subs/search?number=${phoneNumber}&page=${page}`)
-            return responce.data;
-        }
-    }
-    catch (error: any) {
-        if (error.response) {
-            throw new Error(error.response.data.message);
-        }
-        else {
-            throw "Server error"
-        }
-    }
-}   
+        // ВИПРАВЛЕНО: раніше був if/else — або ім'я, або номер окремо.
+        // Тепер завжди передаємо обидва, бекенд сам ігнорує порожні рядки.
+        const params = new URLSearchParams({ page: String(page) });
+        if (fullName)     params.set("fullName", fullName);
+        if (phoneNumber)  params.set("number", phoneNumber);
 
-export async function filterSub(page: number,simStatus:FilterStatus,tarifId:string): Promise<PagedResult<Sub>> {
-    try {
-        const responce = await api.get(`/subs/filter?simStatus=${simStatus}&tarifId=${tarifId}&page=${page}`)
-        return responce.data;
-    }
-    catch (error: any) {
+        const response = await api.get(`/subs/search?${params.toString()}`);
+        return response.data;
+    } catch (error: any) {
         if (error.response) {
             throw new Error(error.response.data.message);
+        } else {
+            throw "Server error";
         }
-        else {
-            throw "Server error"
+    }
+}
+
+export async function filterSub(
+    page: number,
+    simStatus: FilterStatus,
+    tarifId: string
+): Promise<PagedResult<Sub>> {
+    try {
+        const response = await api.get(
+            `/subs/filter?simStatus=${simStatus}&tarifId=${tarifId}&page=${page}`
+        );
+        return response.data;
+    } catch (error: any) {
+        if (error.response) {
+            throw new Error(error.response.data.message);
+        } else {
+            throw "Server error";
         }
     }
 }

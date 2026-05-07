@@ -1,5 +1,3 @@
-import { useNavigate } from "react-router-dom";
-import type { Role } from "../types/types";
 import { api } from "./api";
 
 export async function register(name:string,role:string,email:string,password:string)
