@@ -28,13 +28,13 @@ export default function Drawer({setOpen}:{setOpen:(value:boolean)=>void}){
     return(
         <div className={styles.drawerMain}>
             <h3>Створити користувача</h3>
-            <TextField value={email} onChange={(e)=>{setEmail(e.target.value)}} placeholder="email" sx={{backgroundColor:"white",width:"80%",borderRadius:1}}>
+            <TextField label="email" value={email} onChange={(e)=>{setEmail(e.target.value)}} placeholder="email" sx={{backgroundColor:"white",width:"80%",borderRadius:1}}>
 
             </TextField>
-            <TextField value={name} onChange={(e)=>{setName(e.target.value)}}  placeholder="name" sx={{backgroundColor:"white",width:"80%",borderRadius:1}}>
+            <TextField label="name" value={name} onChange={(e)=>{setName(e.target.value)}}  placeholder="name" sx={{backgroundColor:"white",width:"80%",borderRadius:1}}>
 
             </TextField>
-            <Select sx={{backgroundColor:"white",width:"80%",borderRadius:1}}
+            <Select label="role" sx={{backgroundColor:"white",width:"80%",borderRadius:1}}
                 value={role}
                 onChange={(e)=>setRole(e.target.value)}>
                 <MenuItem value="Manager">Manager</MenuItem>

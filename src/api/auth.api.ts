@@ -4,13 +4,8 @@ export async function register(name:string,role:string,email:string,password:str
 {
     try{
     const responce = await api.post("/auth/register",{name,role,email,password});
-    const {accessToken,refreshToken, ...userData}=responce.data;
 
-    localStorage.setItem("accessToken",accessToken);
-    localStorage.setItem("refreshToken", refreshToken);
-    localStorage.setItem("role",role);
-
-    return userData;
+    return responce.data.message;
     }
     catch(error:any){
         if (error.message){
