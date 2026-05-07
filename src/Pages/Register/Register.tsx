@@ -1,30 +1,22 @@
-import { Box, Button, IconButton, MenuItem, Select, TextField } from "@mui/material";
+import { Box, Button, IconButton, TextField } from "@mui/material";
 import back2 from "../../assets/back2.jpg"
 import {} from "@mui/icons-material"
 import { useState } from "react";
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { register } from "../../api/auth.api";
-import { useNavigate } from "react-router-dom";
 
 export default function Register()
 {
     const[email,setEmail]=useState("");
     const[password,setPassword]=useState("");
     const[name,setName]=useState("");
-    const[role,setRole]=useState<"Manager" | "Admin" | "User" | "">("");
     const[loading,setLoading]=useState(false);
     const [showPassword, setShowPassword] = useState(false);
-    const navigate=useNavigate();
     const [error,setError]=useState<string>("");
     
     const userRegister = async () => {
         setError("");
-
-        if(!role){
-            setError("Empty role");
-            return;
-        }
 
         if(!email.includes("@")||!email.includes("."))
         {
@@ -47,8 +39,8 @@ export default function Register()
         try
         {
             setLoading(true);
-            await register(name,role,email,password);
-            navigate("/srm/dashboard")
+            const responce = await register(name,"User",email,password);
+            setError(responce)
         }
         catch (error: any) {
             console.log("Error: ", error);
@@ -155,15 +147,8 @@ export default function Register()
                         </IconButton>
                         
                     </Box>
-                    <Select sx={{backgroundColor:"white",width:"80%",borderRadius:1}}
-                        value={role}
-                        onChange={(e)=>setRole(e.target.value)}>
-                        <MenuItem value="Manager">Manager</MenuItem>
-                        <MenuItem value="Admin">Admin</MenuItem>
-                        <MenuItem value="User">User</MenuItem>
-                    </Select>
                     {error && 
-                        <Box sx={{color:"red",display:"flex",justifyContent:"center",fontSize:"24px"}}>
+                        <Box sx={{color:"red",display:"flex",justifyContent:"center",fontSize:"24px",ml:"48px"}}>
                             {error}
                         </Box>
                     }
@@ -186,7 +171,7 @@ export default function Register()
                             
                             "&:hover":{backgroundColor:"#a27b18",color:"#fff"}
                         }}>
-                            {loading? "Завантаження...":"Зареєструватися"}
+                            {loading? "Завантаження...":"Надіслати заявку"}
                         </Button>
                         
                     </Box>

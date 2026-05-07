@@ -76,3 +76,10 @@ export type Stats = {
     newSubscribersLast7Days: number;
     totalTarifs: number;
 }
+export type Request ={
+    id:string,
+    name:string,
+    email:string,
+    status:string,
+    createdAt:string
+}
