@@ -1,6 +1,6 @@
 import { Button, TextField } from "@mui/material"
 import styles from "./ModalSubscriber.module.css"
-import  { type ModalSubProps, type Sub  } from "../../types/types"
+import  { type ModalSubProps} from "../../types/types"
 import { useState } from "react"
 import { putSub } from "../../api/subscriber.api";
 

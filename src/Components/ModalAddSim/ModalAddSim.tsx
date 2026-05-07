@@ -1,8 +1,8 @@
-import { Button, MenuItem, Select, TextField } from "@mui/material"
+import { Button, MenuItem, Select } from "@mui/material"
 import styles from "./ModalAddSim.module.css"
-import  { type ModalAddSimProps, type ModalSubProps, type Tarif } from "../../types/types"
+import  { type ModalAddSimProps, type Tarif } from "../../types/types"
 import { useEffect, useState } from "react"
-import { addSim, putSub } from "../../api/subscriber.api";
+import { addSim } from "../../api/subscriber.api";
 import { getTarifs } from "../../api/tarifs.api";
 
 
