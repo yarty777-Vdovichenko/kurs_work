@@ -18,6 +18,8 @@ export default function Register()
     const userRegister = async () => {
         setError("");
 
+        setEmail(prev=>prev.toLowerCase())
+
         if(!email.includes("@")||!email.includes("."))
         {
             setError("Wrong email format");
@@ -30,7 +32,7 @@ export default function Register()
             return;
         }
 
-        if(password.length<8)
+        if(password.length<6)
         {
             setError("Короткий пароль");
             return;

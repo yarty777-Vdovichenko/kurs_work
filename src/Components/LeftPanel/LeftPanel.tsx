@@ -3,6 +3,7 @@ import { Dashboard, CreditCard, Group, ExitToApp, PersonOutline, BarChart, EditD
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useRole } from "../../hooks/useRole";
+import { logOut } from "../../api/auth.api";
 
 export default function LeftPanel({open,setOpen}:{open:boolean;setOpen:(value:boolean)=>void}) {
   const [clicked,setClicked]=useState("Дашборд");
@@ -72,7 +73,7 @@ export default function LeftPanel({open,setOpen}:{open:boolean;setOpen:(value:bo
       </Box>
       <Box>
         <Box
-        onClick={()=>navigate("../")}
+        onClick={async ()=>{await logOut();navigate("../");}}
             sx={{
               display: "flex",
               alignItems: "center",

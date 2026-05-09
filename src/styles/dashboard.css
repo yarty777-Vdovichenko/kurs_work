@@ -18,12 +18,23 @@
     color: white;
     grid-column: span 2;
     gap: 20px;
+    animation: menuApear 0.6s ease;
 }
 .mainDiagram{
     background-color: #1F4F34;
     border-radius: 20px;
     grid-column: span 5 ;
     grid-row: span 3;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 20px;
+}
+.diagramTitle{
+    color: white;
+    font-size: 24px;
+    font-weight: 600;
 }
 .lastActions{
     background-color: #1F4F34;
@@ -32,15 +43,48 @@
     grid-column: span 4;
 }
 .card__title{
-    font-size: 18px;    
+    font-size: 24px;    
     color: white;
 }
 .card--variantA{
-    box-shadow: 0px 8px 12px rgba(0, 255, 0, 0.5);
+    box-shadow: 0px 2px 24px rgba(162, 255, 162, 0.5);
 }
 .card--variantB{
-    box-shadow: 0px 8px 12px rgba(0, 153, 255, 0.5);
+    box-shadow: 0px 2px 24px rgba(102, 194, 255, 0.5);
 }
 .card--variantC{
-    box-shadow: 0px 8px 12px rgba(255, 75, 39, 0.5);
+    box-shadow: 0px 2px 24px rgba(255, 94, 62, 0.5);
 }   
+.card__data{
+    font-size: 42px !important;
+    font-weight: 700;
+    color: white;
+}
+.card__data--green{
+    color: rgb(121, 255, 121);
+}
+.card__data--red{
+    color: rgb(255, 112, 112);
+}
+.card__data--blue{
+    color: rgb(0, 162, 255);
+}
+.card__title--green{
+    color: rgb(121, 255, 121);
+}
+.card__title--red{
+    color: rgb(255, 112, 112);
+}
+.card__title--blue{
+    color: rgb(0, 162, 255);
+}
+@keyframes menuApear {
+    from{
+        opacity: 0;
+        transform: translateY(-12px);
+    }
+    to{
+        opacity: 1;
+         transform: translateY(0px);
+    }
+}

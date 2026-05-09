@@ -1,11 +1,11 @@
 import {IconButton,TextField, } from "@mui/material";
 import { useEffect, useState } from "react";
-import UserDrawer from "../../Components/UserDrawer/UserDrawer.tsx";
 import styles from "./Users.module.css";
 import { deleteUser, getUsers } from "../../api/users.api.ts";
 import { Clear, Delete, Edit, FilterAlt, Refresh } from "@mui/icons-material";
 import ModalUser from "../../Components/ModalUser/ModalUser.tsx";
 import {type Role, type User} from "../../types/types.ts"
+import { useRole } from "../../hooks/useRole.ts";
 
 const selected={backgroundColor:"#52b57d"}
 
@@ -13,7 +13,6 @@ const selected={backgroundColor:"#52b57d"}
 
 export default function Users()
 {
-    const [open,setOpen]=useState<boolean>(false);
     const [selectedUsers,setSelectedUsers]=useState<string[]>([])
     const [users,setUsers]=useState<User[]>([])
     const [filterUsers,setFilterUsers]=useState<User[]>([])
@@ -24,6 +23,7 @@ export default function Users()
     const [modalOpen,setModalOpen]=useState<boolean>(false);
     const [currentRole,setCurrentRole]=useState<Role>("");
     const [id,setId]=useState<string>("");
+    const role = useRole()
 
 useEffect(() => {
     let result = [...users];
@@ -145,7 +145,7 @@ useEffect(() => {
             <div className={styles.cardsUser}>
                 {filterUsers.map(user=>{
                     return(
-                        <div key={user.id} className={`${styles.cardUser} ${selectedUsers.includes(user.id) ? styles.selected : ""}`} onClick={()=>{changeSelect(user.id);setOpen(false)}}>
+                        <div key={user.id} className={`${styles.cardUser} ${selectedUsers.includes(user.id) ? styles.selected : ""}`} onClick={()=>{if(role=="Manager"){changeSelect(user.id)}}}>
                             <div className={styles.dataUser}>
                                 <span>ID: {user.id}</span>
                                 <span className={styles.roleUser}>Role: {user.role}</span>
@@ -153,7 +153,7 @@ useEffect(() => {
                                 <span>Email: {user.email}</span>
                             </div>
                             <div className={styles.selectionUser} style={selectedUsers.includes(user.id)?selected:{}}>
-                                <IconButton sx={{display:"flex",justifyContent:"center",height:"100%"}} 
+                                {(role==="Manager"||(role==="Admin"&&user.role==="User"))&&<IconButton sx={{display:"flex",justifyContent:"center",height:"100%"}} 
                                 onClick={
                                     (e) => {e.stopPropagation();
                                     setId(user.id);
@@ -162,13 +162,13 @@ useEffect(() => {
                                 }
                                 }>
                                     <Edit sx={{color:"white",}}/>
-                                </IconButton>
+                                </IconButton>}
                             </div>
                         </div>
                     )
                 })}
             </div>
-            <div className={`${styles.iconsUsers} ${open ? styles.open : ""}`}>
+            <div className={`${styles.iconsUsers}`}>
                 <IconButton
                 onClick={()=>window.scrollTo({ top: 0, behavior: "smooth" })}
                 sx={{
@@ -182,18 +182,6 @@ useEffect(() => {
                     stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 6l4-4l4 4m-4-4v20"/></svg>
                 </IconButton>
                 <IconButton 
-                onClick={()=>setOpen(true)}
-                sx={{
-                    backgroundColor:"#ec813f",
-                    color:"white",
-                    transition:"0.3s",
-
-                    "&:hover":{backgroundColor:"#26382e",color:"white"}
-                }}>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" 
-                    d="M18 12.998h-5v5a1 1 0 0 1-2 0v-5H6a1 1 0 0 1 0-2h5v-5a1 1 0 0 1 2 0v5h5a1 1 0 0 1 0 2"/></svg>
-                </IconButton>
-                <IconButton 
                 onClick={()=>loadUser()}
                 sx={{
                     backgroundColor:"#ec813f",
@@ -204,11 +192,6 @@ useEffect(() => {
                 }}><Refresh/>
                 </IconButton>
             </div>
-            {open&&(
-            <div className= {styles.drawer}>
-                <UserDrawer setOpen={setOpen}/>
-            </div>
-            )}
             {modalOpen &&
                 <ModalUser role={currentRole} id={id} setOpen={setModalOpen}>
                     

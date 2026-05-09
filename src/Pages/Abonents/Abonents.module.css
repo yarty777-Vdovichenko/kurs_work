@@ -226,3 +226,151 @@ span:nth-child(4){
     position: sticky;
     bottom: 0px;
 }
+/* Додай ці стилі до свого Abonents.module.css */
+
+.tableWrapper {
+    width: 100%;
+    overflow-x: auto;
+    border-radius: 8px;
+    margin-top: 12px;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.table thead tr {
+    background-color: #26382e;
+}
+
+.table thead th {
+    padding: 12px 16px;
+    text-align: left;
+    color: #ec813f;
+    font-weight: 600;
+    font-size: 14px;
+    white-space: nowrap;
+    border-bottom: 2px solid #ec813f44;
+}
+
+.subRow {
+    cursor: pointer;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    transition: background-color 0.2s;
+}
+
+.subRow:hover {
+    background-color: rgba(236, 129, 63, 0.1);
+}
+
+.subRow td {
+    padding: 10px 16px;
+    color: white;
+    font-size: 14px;
+}
+
+.selectedRow {
+    background-color: rgba(82, 181, 125, 0.2) !important;
+}
+
+.selectedRow:hover {
+    background-color: rgba(82, 181, 125, 0.3) !important;
+}
+
+.idCell {
+    font-family: monospace;
+    font-size: 12px !important;
+    color: rgba(255, 255, 255, 0.5) !important;
+    max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.expandBtn {
+    background: none;
+    border: none;
+    color: #ec813f;
+    cursor: pointer;
+    font-size: 12px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.expandBtn:hover {
+    background-color: rgba(236, 129, 63, 0.2);
+}
+
+/* Рядок з SIM-картами (вкладена таблиця) */
+.simsRow td {
+    padding: 0 !important;
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+.simsTableWrapper {
+    padding: 8px 24px 16px 48px;
+}
+
+.simsTable {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.simsTable thead tr {
+    background-color: rgba(38, 56, 46, 0.8);
+}
+
+.simsTable thead th {
+    padding: 8px 12px;
+    text-align: left;
+    color: rgba(236, 129, 63, 0.8);
+    font-size: 13px;
+    font-weight: 600;
+    border-bottom: 1px solid #ec813f33;
+}
+
+.simRow {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    transition: background-color 0.2s;
+}
+
+.simRow:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.simRow td {
+    padding: 8px 12px;
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 13px;
+}
+
+/* Статус бейдж */
+.statusBadge {
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.active {
+    background-color: rgba(82, 181, 125, 0.2);
+    color: #52b57d;
+    border: 1px solid #52b57d55;
+}
+
+.blocked {
+    background-color: rgba(220, 80, 80, 0.2);
+    color: #e05555;
+    border: 1px solid #e0555555;
+}
+
+.inactive {
+    background-color: rgba(180, 180, 180, 0.2);
+    color: #aaaaaa;
+    border: 1px solid #aaaaaa55;
+}

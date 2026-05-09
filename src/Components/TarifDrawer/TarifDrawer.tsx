@@ -21,6 +21,10 @@ export default function TarifDrawer({setOpen}:{setOpen:(value:boolean)=>void}){
             setError("Заповніть всі поля")
             return;
         }
+        if(Number(price)>10000||Number(price)<1){
+            setError("Не правильна ціна")
+            return;
+        }
         try {
             await postTarifs(name, Number(capasity),Number(minutes),additional,Number(price));
             setCreated("Created");

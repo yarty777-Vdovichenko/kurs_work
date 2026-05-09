@@ -3,10 +3,12 @@ import styles from "./ModalUser.module.css"
 import  { type Role,type ModalUserProps } from "../../types/types"
 import { useState } from "react"
 import { patchUser } from "../../api/users.api";
+import { useRole } from "../../hooks/useRole";
 
 
 export default function ModalUser({role,id,setOpen}:ModalUserProps){
     const [newRole,setNewRole]=useState<Role>(role);
+    const rolee = useRole()
 
     async function PatchUserHelper(){
         if(newRole===role)
@@ -30,7 +32,7 @@ export default function ModalUser({role,id,setOpen}:ModalUserProps){
             <Select sx={{backgroundColor:"white",width:"80%",borderRadius:1}}
                 value={newRole}
                 onChange={(e)=>setNewRole(e.target.value)}>
-                <MenuItem value="Manager">Meneger</MenuItem>
+                {rolee==="Manager"&&<MenuItem value="Manager">Meneger</MenuItem>}
                 <MenuItem value="Admin">Admin</MenuItem>
                 <MenuItem value="User">User</MenuItem>
             </Select>

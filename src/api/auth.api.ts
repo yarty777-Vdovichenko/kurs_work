@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import { api } from "./api";
 
 export async function register(name:string,role:string,email:string,password:string)
@@ -26,6 +27,25 @@ export async function login(email:string,password:string) {
         localStorage.setItem("role",role);
 
         return userData;
+    }
+    catch(error:any){
+        if (error.response) {
+            throw error.response.data.message;
+        } else {
+            throw "Server error";
+        }
+    }
+}
+
+export async function logOut(){
+    try{
+        localStorage.setItem("accessToken","");
+        localStorage.setItem("refreshToken", "");
+        localStorage.setItem("role","");
+
+        const responce =await api.post("/auth/logout");
+
+        return responce;
     }
     catch(error:any){
         if (error.response) {
