@@ -33,7 +33,7 @@ export default function SubscriberDrawer({setOpen,onSuccess}:{setOpen:(value:boo
     const sendSubscriber = async () => {
     setError("");
     setCreated("");
-    if(tarifId===""){
+    if(tarifId===""&&checked===true){
         setError("Виберіть тариф");
         return;
     }
