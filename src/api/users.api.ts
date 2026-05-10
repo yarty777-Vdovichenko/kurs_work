@@ -16,18 +16,6 @@ export async function getUsers() {
     }    
 }
 
-export async function postUser(name: string, email: string, role: string) {
-    try {
-        const response = await api.post("/users", { name, email, password: "111111", role });
-        return response.data;
-    } catch (error: any) {
-        if (error.response) {
-            throw new Error(error.response.data.message);
-        }
-        throw new Error("Server error");
-    }
-}
-
 export async function deleteUser(id:string) {
     try{
         const responce = await api.delete(`/users/${id}`);

@@ -37,22 +37,7 @@ export async function login(email:string,password:string) {
 }
 
 export async function logOut(){
-    try{
-        localStorage.setItem("accessToken","");
-        localStorage.setItem("refreshToken", "");
-        localStorage.setItem("role","");
-
-        const responce =await api.post("/auth/logout");
-
-        return responce;
-    }
-    catch(error:any){
-        if (error.response) {
-            throw error.response.data.message;
-        } else {
-            throw "Server error";
-        }
-    }
+    await api.post("/auth/logout")
 }
 
 export async function refreshToken() {

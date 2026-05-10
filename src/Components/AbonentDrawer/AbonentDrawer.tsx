@@ -13,7 +13,7 @@ export default function SubscriberDrawer({setOpen,onSuccess}:{setOpen:(value:boo
     const [checked, setChecked] = useState(false);
     const [tarifs,setTarifs]=useState<Tarif[]>()
     const [status,setStatus]=useState<"active" | "blocked">("active")
-    const [tarifId,setTarifId]=useState<string>()
+    const [tarifId,setTarifId]=useState<string>("")
 
     async function loadTarifs(){
         try{
@@ -33,6 +33,10 @@ export default function SubscriberDrawer({setOpen,onSuccess}:{setOpen:(value:boo
     const sendSubscriber = async () => {
     setError("");
     setCreated("");
+    if(tarifId===""){
+        setError("Виберіть тариф");
+        return;
+    }
     try {
         await postSub({
             fullName: name,
@@ -48,8 +52,7 @@ export default function SubscriberDrawer({setOpen,onSuccess}:{setOpen:(value:boo
     return(
         <div className={styles.drawerMain}>
             <h3>Додати абонента</h3>    
-            <p>ПІБ</p>
-            <TextField variant="filled" label="name" value={name} onChange={(e)=>{setName(e.target.value)}}  placeholder="name" sx={{backgroundColor:"white",width:"80%",borderRadius:1}}>
+            <TextField variant="filled" label="ПІБ" value={name} onChange={(e)=>{setName(e.target.value)}} sx={{backgroundColor:"white",width:"80%",borderRadius:1}}>
             </TextField>
             <Checkbox sx={{color:"white"}} checked={checked} onChange={(e) => setChecked(e.target.checked)}></Checkbox><p>Створити сімку?    </p>
             {checked && 

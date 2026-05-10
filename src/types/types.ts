@@ -93,3 +93,8 @@ export type Request ={
     status:string,
     createdAt:string
 }
+export type ModalDelteTarif = {
+    id:string,
+    setOpen:React.Dispatch<React.SetStateAction<boolean>>
+    onSuccess?: () => void
+}

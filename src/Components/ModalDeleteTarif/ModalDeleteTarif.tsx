@@ -1,12 +1,11 @@
 import { Button, MenuItem, Select } from "@mui/material"
-import styles from "./ModalAddSim.module.css"
-import  { type ModalAddSimProps, type Tarif } from "../../types/types"
+import styles from "./ModalDeleteTarif.module.css"
+import  { type ModalDelteTarif, type Tarif } from "../../types/types"
 import { useEffect, useState } from "react"
-import { addSim } from "../../api/subscriber.api";
-import { getTarifs } from "../../api/tarifs.api";
+import { deleteTarifs, getTarifs } from "../../api/tarifs.api";
 
 
-export default function ModalAddSim({subId,setOpen,onSuccess}:ModalAddSimProps){
+export default function ModalDeleteTarif({id,setOpen,onSuccess}:ModalDelteTarif){
     const [tarifs,setTarifs]=useState<Tarif[]>()
     const [tarifId,setTarifId]=useState<string>("")
 
@@ -25,13 +24,13 @@ export default function ModalAddSim({subId,setOpen,onSuccess}:ModalAddSimProps){
         loadTarifs()
     },[])
 
-    async function PatchUserHelper(){
+    async function handleReplaceTarif(){
         if(tarifId===""){
             alert("Виберіть тариф")
             return;
         }
         try{
-            await addSim({subId,tarifId});
+            await deleteTarifs(id,tarifId);
             onSuccess?.();
             setOpen(false);
         }
@@ -43,12 +42,13 @@ export default function ModalAddSim({subId,setOpen,onSuccess}:ModalAddSimProps){
     return (
     <div className={styles.all}>
         <div className={styles.modal}>
-            <p>Тариф</p>
+            <p>Тариф на який ви хочете замінити</p>
             <Select  sx={{backgroundColor:"white",width:"80%",borderRadius:1}} value={tarifId ?? ""} onChange={(e) => setTarifId(e.target.value)}>
-                {tarifs?.map(tarif=><MenuItem key={tarif.id} value={tarif.id}>{tarif.name}</MenuItem>)}
+                {tarifs?.filter(tarif=>tarif.id!==id)
+                    .map(tarif=><MenuItem key={tarif.id} value={tarif.id}>{tarif.name}</MenuItem>)}
             </Select>
                 <div className={styles.buttons}>
-                <Button sx={{backgroundColor:"#9ACFB1",color:"white"}} onClick={()=>{PatchUserHelper()}}>Зберегти</Button>
+                <Button sx={{backgroundColor:"#9ACFB1",color:"white"}} onClick={()=>{handleReplaceTarif()}}>Зберегти</Button>
                 <Button sx={{backgroundColor:"#ec813f",color:"white"}} onClick={()=>{setOpen(false)}}>Скасувати</Button>
             </div>
         </div>  

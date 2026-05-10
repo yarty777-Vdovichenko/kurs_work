@@ -40,28 +40,37 @@ export default function ModalTarif({ tarif, setOpen }: ModalTarifProps) {
     return (
         <div className={styles.all}>
             <div className={styles.modal}>
-                <Typography variant="h6" sx={{color:"white"}}>Редагування тарифу</Typography>
-
+                <Typography variant="h6" sx={{color:"white"}}>Редагування тарифу</Typography>  
                 <TextField sx={{backgroundColor:"white",width:"80%",borderRadius:1}}
+                variant="filled"
+                    label="Назва"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                 />
                 <TextField sx={{backgroundColor:"white",width:"80%",borderRadius:1}}
+                variant="filled"
+                    label="Кількість Гб"
                     type="number"
                     value={capacity}
                     onChange={(e) => setCapacity(Number(e.target.value))}
                 />
                 <TextField sx={{backgroundColor:"white",width:"80%",borderRadius:1}}
+                variant="filled"
+                    label="Кількість Хв"
                     type="number"
                     value={minutes}
                     onChange={(e) => setMinutes(Number(e.target.value))}
                 />
                 <TextField sx={{backgroundColor:"white",width:"80%",borderRadius:1}}
+                    variant="filled"
+                    label="Ціна"
                     type="number"
                     value={price}
                     onChange={(e) => setPrice(Number(e.target.value))}
                 />
                 <TextField sx={{backgroundColor:"white",width:"80%",borderRadius:1}}
+                    variant="filled"
+                    label="Додаткове"
                     value={additional}
                     onChange={(e) => setAdditional(e.target.value)}
                 />

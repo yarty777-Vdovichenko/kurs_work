@@ -63,12 +63,15 @@ export default function ModalEditSim({subId,simId,setOpen,onSuccess}:ModalEditSi
     return (
     <div className={styles.all}>
         <div className={styles.modal}>
+            <p style={{color:"white"}}>Статус</p>
             <Select 
+            variant="filled"
             sx={{backgroundColor:"white",width:"80%",borderRadius:1}}
             value={status} onChange={(e)=>setStatus(e.target.value)}>
                 <MenuItem value={"active"}>Активна</MenuItem>
                 <MenuItem value={"blocked"}>Заблокована</MenuItem>
             </Select>
+            <p style={{color:"white"}}>Тариф</p>
             <Select  sx={{backgroundColor:"white",width:"80%",borderRadius:1}} value={tarifId} onChange={(e) => setTarifId(e.target.value)}>
                 {tarifs?.map(tarif=><MenuItem key={tarif.id} value={tarif.id}>{tarif.name}</MenuItem>)}
             </Select>

@@ -68,20 +68,30 @@ useEffect(() => {
     }
 
     async function deleteSelected(){
-        const isConfirmed = window.confirm("Ви впевнені, що хочете видалити вибраних користувачів? Ви розумієте що вони втратять доступ до данного застосунку?");
-    
-        if (!isConfirmed) return;
+    const isConfirmed = window.confirm("Ви впевнені?");
+    if (!isConfirmed) return;
 
-        try{
-            await Promise.all(selectedUsers.map(id=>deleteUser(id)))
-            setUsers(prev => prev.filter(user=> !selectedUsers.includes(user.id)))
-            setSelectedUsers([]);
+    try {
+        const toDelete = role === "Admin"
+            ? selectedUsers.filter(id => {
+                const user = users.find(u => u.id === id);
+                return user?.role === "User";
+              })
+            : selectedUsers;
+
+        if (toDelete.length === 0) {
+            alert("Немає дозволених для видалення користувачів");
+            return;
         }
-        catch(error:any){
-            console.log(error);
-            alert(error)
-        }
+
+        await Promise.all(toDelete.map(id => deleteUser(id)));
+        setUsers(prev => prev.filter(user => !toDelete.includes(user.id)));
+        setSelectedUsers([]);
+    } catch(error: any) {
+        console.log(error);
+        alert(error);
     }
+}
 
     return(
         <div className={styles.mainUser}>
@@ -145,7 +155,19 @@ useEffect(() => {
             <div className={styles.cardsUser}>
                 {filterUsers.map(user=>{
                     return(
-                        <div key={user.id} className={`${styles.cardUser} ${selectedUsers.includes(user.id) ? styles.selected : ""}`} onClick={()=>{if(role=="Manager"){changeSelect(user.id)}}}>
+                       <div 
+                            key={user.id} 
+                            className={`${styles.cardUser} ${selectedUsers.includes(user.id) ? styles.selected : ""}`}
+                            style={{
+                                cursor: (role === "Manager" || (role === "Admin" && user.role === "User")) 
+                                    ? "pointer" 
+                                    : "default"
+                            }}
+                            onClick={() => {
+                                if (role === "Manager") changeSelect(user.id);
+                                if (role === "Admin" && user.role === "User") changeSelect(user.id);
+                            }}
+                        > 
                             <div className={styles.dataUser}>
                                 <span>ID: {user.id}</span>
                                 <span className={styles.roleUser}>Role: {user.role}</span>
@@ -153,7 +175,7 @@ useEffect(() => {
                                 <span>Email: {user.email}</span>
                             </div>
                             <div className={styles.selectionUser} style={selectedUsers.includes(user.id)?selected:{}}>
-                                {(role==="Manager"||(role==="Admin"&&user.role==="User"))&&<IconButton sx={{display:"flex",justifyContent:"center",height:"100%"}} 
+                                {(role==="Manager")&&<IconButton sx={{display:"flex",justifyContent:"center",height:"100%"}} 
                                 onClick={
                                     (e) => {e.stopPropagation();
                                     setId(user.id);

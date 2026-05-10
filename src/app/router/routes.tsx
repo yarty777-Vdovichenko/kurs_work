@@ -8,7 +8,6 @@ import Dashboard from '../../Pages/Dashboard/Dashboard';
 import Tarifs from '../../Pages/Tarifs/Tarifs';
 import Users from '../../Pages/Users/Users';
 import Abonents from '../../Pages/Abonents/Abonents';
-import Charts from '../../Pages/Charts/Charts';
 import ForbiddenPage from '../../Pages/ForbiddenPage/ForbiddenPage';
 import PrivatRoute from '../../Components/PrivatRoute/PrivatRoute';
 import Application from '../../Pages/Application/Application'
@@ -44,13 +43,8 @@ export default function Router() {
             </PrivatRoute>
           }/>
           <Route path='applications' element={
-            <PrivatRoute alloweddRoles={["Manager"]}>
+            <PrivatRoute alloweddRoles={["Admin","Manager"]}>
               <Application/>
-            </PrivatRoute>
-          }/>
-          <Route path='charts' element={
-            <PrivatRoute alloweddRoles={["Manager"]}>
-              <Charts/>
             </PrivatRoute>
           }/>
         </Route>

@@ -28,9 +28,9 @@ export async function postTarifs(Name:string,Internet_capacity:number,Minutes:nu
     }
 }
 
-export async function deleteTarifs(id:string) {
+export async function deleteTarifs(id:string,newTarifId:string) {
     try{
-        const responce = await api.delete(`/tarifs/${id}`);
+        const responce = await api.delete(`/tarifs/${id}?newTarifId=${newTarifId}`);
 
         return responce.data;
     }

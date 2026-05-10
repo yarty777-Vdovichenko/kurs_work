@@ -57,7 +57,7 @@ export default function Dashboard() {
 
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
-            <Pie
+            <Pie  width={400} height={400}
               data={simXTarif}
               dataKey="count"
               nameKey="tarifName"
@@ -87,7 +87,7 @@ export default function Dashboard() {
 
         <div style={{ width: "100%", height: "400px" }}>
           <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={subXDay}>
+            <LineChart data={subXDay} width={400} height={400}>
 
               <CartesianGrid strokeDasharray="3 3" />
 
