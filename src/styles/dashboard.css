@@ -4,7 +4,6 @@
     min-height: calc(100vh - 50px);
     display: grid;
     grid-template-columns: repeat(10,1fr);
-    grid-template-rows: repeat(4,1fr);
     padding: 20px;
     gap: 20px;
 }
@@ -86,5 +85,49 @@
     to{
         opacity: 1;
          transform: translateY(0px);
+    }
+}
+@media (max-width: 1100px){
+    .card{
+        grid-column: span 1;
+        grid-row: span 1;
+    }
+    .card--wide{
+        grid-column: span 2;
+    }
+    .mainDiagram{
+        grid-column: span 2;
+        grid-row: span 1;
+        min-height: 400px;
+    }
+    .lastActions{
+        grid-column: span 2;
+        grid-row: span 1;
+    }
+    .main{
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: auto;
+    }
+}
+@media (max-width: 400px){
+    .card{
+        grid-column: span 1;
+        grid-row: span 1;
+    }
+    .card--wide{
+        grid-column: span 1;
+    }
+    .mainDiagram{
+        grid-column: span 1;
+        grid-row: span 1;
+        min-height: 100px;
+    }
+    .lastActions{
+        grid-column: span 1;
+        grid-row: span 1;
+    }
+    .main{
+        grid-template-columns: repeat(1, 1fr);
+        grid-template-rows: auto;
     }
 }

@@ -46,7 +46,7 @@ export default function Dashboard() {
         <p className='card__title card__title--blue'>Тарифи</p>
         <span  className="card__data card__data--blue">{stat?.totalTarifs}</span>
       </div>
-      <div className='card card--variantA'>
+      <div className='card card--wide card--variantA'>
         <p className='card__title card__title--green'>+ нових за 7 днів</p>
         <span  className="card__data card__data--green">+{stat?.newSubscribersLast7Days}</span>
       </div>
@@ -55,30 +55,28 @@ export default function Dashboard() {
           SIM по тарифах
         </h2>
 
-        <ResponsiveContainer width="100%" height="100%">
-          <PieChart>
-            <Pie  width={400} height={400}
-              data={simXTarif}
-              dataKey="count"
-              nameKey="tarifName"
-              cx="50%"
-              cy="50%"
-              outerRadius={120}
-              label={({ tarifName, percent }: any) =>
-                `${tarifName} ${(percent * 100).toFixed(0)}%`
-              }
-            >
-              {simXTarif.map((_, index) => (
-                <Cell
-                  key={index}
-                  fill={COLORS[index % COLORS.length]}
-                />
-              ))}
-            </Pie>
-
-            <Tooltip />
-          </PieChart>
-        </ResponsiveContainer>
+        <div style={{ width: "100%", height: "400px" }}>
+          <ResponsiveContainer width="100%" height="100%">
+            <PieChart>
+              <Pie
+                data={simXTarif}
+                dataKey="count"
+                nameKey="tarifName"
+                cx="50%"
+                cy="50%"
+                outerRadius={120}
+                label={({ tarifName, percent }: any) =>
+                  `${tarifName} ${(percent * 100).toFixed(0)}%`
+                }
+              >
+                {simXTarif.map((_, index) => (
+                  <Cell key={index} fill={COLORS[index % COLORS.length]} />
+                ))}
+              </Pie>
+              <Tooltip />
+            </PieChart>
+          </ResponsiveContainer>
+        </div>
       </div>
       <div className='mainDiagram'>
         <h2 className="diagramTitle">
@@ -87,7 +85,7 @@ export default function Dashboard() {
 
         <div style={{ width: "100%", height: "400px" }}>
           <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={subXDay} width={400} height={400}>
+            <LineChart data={subXDay}>
 
               <CartesianGrid strokeDasharray="3 3" />
 

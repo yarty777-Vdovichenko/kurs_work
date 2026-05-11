@@ -307,7 +307,7 @@ export default function Abonents() {
                                                             .map(sim => (
                                                                 <tr key={sim.id} className={styles.simRow}>
                                                                     <td className={styles.idCell}>{sim.id}</td>
-                                                                    <td>{sim.simNumber}</td>
+                                                                    <td>{sim.simNumber.startsWith("+") ? sim.simNumber : `+${sim.simNumber}`}</td>
                                                                     <td>
                                                                         <span className={`${styles.statusBadge} ${styles[sim.status]}`}>
                                                                             {sim.status}
