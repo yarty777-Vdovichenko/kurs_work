@@ -184,3 +184,6 @@
         right: 0px;
     }
 }
+.cardUser.selected .selectionUser{
+    background-color: #52b57d;
+}

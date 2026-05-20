@@ -1,224 +1,247 @@
-import {IconButton,TextField, } from "@mui/material";
-import { useEffect, useState } from "react";
+import { IconButton, TextField } from "@mui/material";
+import { useEffect, useMemo, useState } from "react";
 import styles from "./Users.module.css";
 import { deleteUser, getUsers } from "../../api/users.api.ts";
 import { Clear, Delete, Edit, FilterAlt, Refresh } from "@mui/icons-material";
 import ModalUser from "../../Components/ModalUser/ModalUser.tsx";
-import {type Role, type User} from "../../types/types.ts"
+import { type Role, type User } from "../../types/types.ts";
 import { useRole } from "../../hooks/useRole.ts";
 
-const selected={backgroundColor:"#52b57d"}
+export default function Users() {
+    const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
+    const [users, setUsers] = useState<User[]>([]);
 
+    const [openFilter, setOpenFilter] = useState(false);
+    const [filterRole, setFilterRole] = useState<string>("All");
+    const [filterSort, setFilterSort] = useState<string>("None");
+    const [search, setSearch] = useState("");
 
+    const [modalOpen, setModalOpen] = useState(false);
+    const [currentRole, setCurrentRole] = useState<Role>("");
+    const [id, setId] = useState<string>("");
 
-export default function Users()
-{
-    const [selectedUsers,setSelectedUsers]=useState<string[]>([])
-    const [users,setUsers]=useState<User[]>([])
-    const [filterUsers,setFilterUsers]=useState<User[]>([])
-    const [openFilter,setOpenFilter]=useState<boolean>(false);
-    const [filterRole,setFilterRole]=useState<string>("All");
-    const [filterSort,setFilterSort]=useState<string>("None");
-    const [search,setSearch]=useState<string>("");
-    const [modalOpen,setModalOpen]=useState<boolean>(false);
-    const [currentRole,setCurrentRole]=useState<Role>("");
-    const [id,setId]=useState<string>("");
-    const role = useRole()
+    const [refresh, setRefresh] = useState(0);
 
-useEffect(() => {
-    let result = [...users];
+    const role = useRole();
 
-    if (filterRole !== "All") {
-        result = result.filter(user => user.role === filterRole);
-    }
-
-    if (search) {
-        result = result.filter(user =>
-            user.name.toLowerCase().includes(search.toLowerCase()) ||
-            user.email.toLowerCase().includes(search.toLowerCase())
-        );
-    }
-
-    if (filterSort === "Name") {
-        result.sort((a, b) => a.name.localeCompare(b.name));
-    } else if (filterSort === "Email") {
-        result.sort((a, b) => a.email.localeCompare(b.email));
-    }
-
-    setFilterUsers(result);
-}, [users, filterRole, filterSort, search]);
-
-    async function loadUser(){
-        try{
-            const responce = await getUsers();
-
-            setUsers(responce);
-        }catch(error)
-        {
+    async function loadUser() {
+        try {
+            const response = await getUsers();
+            setUsers(response);
+        } catch (error) {
             console.log(error);
         }
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         loadUser();
-    },[])
+    }, [refresh]);
 
-    function changeSelect(id:string){
-        setSelectedUsers(prev=> prev.includes(id) ? prev.filter(u=>u!==id) : [...prev,id])
-    }
+    const filteredUsers = useMemo(() => {
+        let result = [...users];
 
-    async function deleteSelected(){
-    const isConfirmed = window.confirm("Ви впевнені?");
-    if (!isConfirmed) return;
-
-    try {
-        const toDelete = role === "Admin"
-            ? selectedUsers.filter(id => {
-                const user = users.find(u => u.id === id);
-                return user?.role === "User";
-              })
-            : selectedUsers;
-
-        if (toDelete.length === 0) {
-            alert("Немає дозволених для видалення користувачів");
-            return;
+        if (filterRole !== "All") {
+            result = result.filter(user => user.role === filterRole);
         }
 
-        await Promise.all(toDelete.map(id => deleteUser(id)));
-        setUsers(prev => prev.filter(user => !toDelete.includes(user.id)));
-        setSelectedUsers([]);
-    } catch(error: any) {
-        console.log(error);
-        alert(error);
+        if (search) {
+            result = result.filter(user =>
+                user.name.toLowerCase().includes(search.toLowerCase()) ||
+                user.email.toLowerCase().includes(search.toLowerCase())
+            );
+        }
+
+        if (filterSort === "Name") {
+            result.sort((a, b) => a.name.localeCompare(b.name));
+        } else if (filterSort === "Email") {
+            result.sort((a, b) => a.email.localeCompare(b.email));
+        }
+
+        return result;
+    }, [users, filterRole, filterSort, search]);
+
+    function changeSelect(id: string) {
+        setSelectedUsers(prev =>
+            prev.includes(id)
+                ? prev.filter(u => u !== id)
+                : [...prev, id]
+        );
     }
-}
 
-    return(
+    async function deleteSelected() {
+        const isConfirmed = window.confirm("Ви впевнені?");
+        if (!isConfirmed) return;
+
+        try {
+            const toDelete = role === "Admin"
+                ? selectedUsers.filter(id => {
+                    const user = users.find(u => u.id === id);
+                    return user?.role === "User";
+                })
+                : selectedUsers;
+
+            if (toDelete.length === 0) {
+                alert("Немає дозволених для видалення користувачів");
+                return;
+            }
+
+            await Promise.all(toDelete.map(id => deleteUser(id)));
+
+            setSelectedUsers([]);
+            setRefresh(prev => prev + 1);
+
+        } catch (error: any) {
+            console.log(error);
+            alert(error);
+        }
+    }
+
+    return (
         <div className={styles.mainUser}>
-            <div className={styles.search} id="search">
-                <TextField value={search} onChange={(e)=>{setSearch(e.target.value)}} placeholder="Пошук за ім'ям/ел. поштою..." sx={{backgroundColor:"white", borderColor:"#9ACFB1",flex:1,borderRadius:1}}></TextField>
-                 <IconButton onClick={()=>{setSearch("");}}>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="white" 
-                    d="m8.4 17l3.6-3.6l3.6 3.6l1.4-1.4l-3.6-3.6L17 8.4L15.6 7L12 10.6L8.4 7L7 
-                    8.4l3.6 3.6L7 15.6zm3.6 5q-2.075 0-3.9-.788t-3.175-2.137T2.788 15.9T2 
-                    12t.788-3.9t2.137-3.175T8.1 2.788T12 2t3.9.788t3.175 2.137T21.213 8.1T22 
-                    12t-.788 3.9t-2.137 3.175t-3.175 2.138T12 22m0-2q3.35 0 5.675-2.325T20 
-                    12t-2.325-5.675T12 4T6.325 6.325T4 12t2.325 5.675T12 20m0-8"/></svg>
-                 </IconButton>
-                    <IconButton onClick={()=>{!openFilter?setOpenFilter(true):setOpenFilter(false);setFilterSort("None");setFilterRole("All");}}><FilterAlt sx={{fontSize:"28px",color:"white"}}/></IconButton>
-                 
-            </div>
-            {openFilter &&
-            <div className={styles.filterMenu}>
-                <p>Role</p>
-                <div className={styles.choose}>
-                    <div className={`${styles.variant} ${filterRole === "All" ? styles.selected : ""}`} 
-                    onClick={() => setFilterRole("All")}>All</div>
-                    <div className={`${styles.variant} ${filterRole === "Manager" ? styles.selected : ""}`}  
-                    onClick={() => setFilterRole("Manager")}>Meneger</div>
-                    <div className={`${styles.variant} ${filterRole === "Admin" ? styles.selected : ""}`} 
-                    onClick={() => setFilterRole("Admin")}>Admin</div>
-                    <div className={`${styles.variant} ${filterRole === "User" ? styles.selected : ""}`} 
-                    onClick={() => setFilterRole("User")}>User</div>
-                </div>
-                <p>Сортування</p>
-                <div className={styles.choose}>
-                    <div className={`${styles.variant} ${filterSort === "None" ? styles.selected : ""}`}  
-                    onClick={()=>setFilterSort("None")}>
-                        Без сортування
-                    </div>
-                    <div className={`${styles.variant} ${filterSort === "Name" ? styles.selected : ""}`}  
-                    onClick={()=>setFilterSort("Name")}>
-                        За ім'ям
-                    </div>
-                    <div className={`${styles.variant} ${filterSort === "Email" ? styles.selected : ""}`}  
-                    onClick={()=>setFilterSort("Email")}>
-                        За ел. поштою
-                    </div>
-                </div>
-            </div>
-            }
-            {selectedUsers.length === 0 && 
-            <div className={styles.simple}>
-                <p><i>Центр управління користувачами: всі, хто підключений до нашого сервісу, в одному місці</i></p>
-            </div>}
-            {selectedUsers.length > 0 && 
-            <div className={styles.menu}>
-                <p>Вибрано користувачів: {selectedUsers.length}</p>
-                <div>
-                    <IconButton onClick={()=>deleteSelected()}><Delete sx={{fontSize:"32px",color:"white"}}/></IconButton>
-                    
-                    <IconButton onClick={()=>setSelectedUsers([])}><Clear sx={{fontSize:"32px",color:"white"}}/></IconButton>
-                </div>
-            </div>
-            }
-            <div className={styles.cardsUser}>
-                {filterUsers.map(user=>{
-                    return(
-                       <div 
-                            key={user.id} 
-                            className={`${styles.cardUser} ${selectedUsers.includes(user.id) ? styles.selected : ""}`}
-                            style={{
-                                cursor: (role === "Manager" || (role === "Admin" && user.role === "User")) 
-                                    ? "pointer" 
-                                    : "default"
-                            }}
-                            onClick={() => {
-                                if (role === "Manager") changeSelect(user.id);
-                                if (role === "Admin" && user.role === "User") changeSelect(user.id);
-                            }}
-                        > 
-                            <div className={styles.dataUser}>
-                                <span>ID: {user.id}</span>
-                                <span className={styles.roleUser}>Role: {user.role}</span>
-                                <span>Name: {user.name}</span> 
-                                <span>Email: {user.email}</span>
-                            </div>
-                            <div className={styles.selectionUser} style={selectedUsers.includes(user.id)?selected:{}}>
-                                {(role==="Manager")&&<IconButton sx={{display:"flex",justifyContent:"center",height:"100%"}} 
-                                onClick={
-                                    (e) => {e.stopPropagation();
-                                    setId(user.id);
-                                    setCurrentRole(user.role);
-                                    setModalOpen(true);
-                                }
-                                }>
-                                    <Edit sx={{color:"white",}}/>
-                                </IconButton>}
-                            </div>
-                        </div>
-                    )
-                })}
-            </div>
-            <div className={`${styles.iconsUsers}`}>
-                <IconButton
-                onClick={()=>window.scrollTo({ top: 0, behavior: "smooth" })}
-                sx={{
-                    backgroundColor:"#ec813f",
-                    color:"white",
-                    transition:"0.3s",
 
-                    "&:hover":{backgroundColor:"#26382e",color:"white"}
+            <div className={styles.search}>
+                <TextField
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    placeholder="Пошук за ім'ям/ел. поштою..."
+                    sx={{ backgroundColor: "white", flex: 1, borderRadius: 1 }}
+                />
+
+                <IconButton onClick={() => setSearch("")}>
+                    <Clear sx={{ color: "white" }} />
+                </IconButton>
+
+                <IconButton onClick={() => {
+                    setOpenFilter(prev => !prev);
+                    setFilterSort("None");
+                    setFilterRole("All");
                 }}>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" 
-                    stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 6l4-4l4 4m-4-4v20"/></svg>
-                </IconButton>
-                <IconButton 
-                onClick={()=>loadUser()}
-                sx={{
-                    backgroundColor:"#ec813f",
-                    color:"white",
-                    transition:"0.3s",
-
-                    "&:hover":{backgroundColor:"#26382e",color:"white"}
-                }}><Refresh/>
+                    <FilterAlt sx={{ fontSize: "28px", color: "white" }} />
                 </IconButton>
             </div>
-            {modalOpen &&
-                <ModalUser role={currentRole} id={id} setOpen={setModalOpen}>
-                    
-                </ModalUser>
-            }
+
+            {openFilter && (
+                <div className={styles.filterMenu}>
+                    <p>Role</p>
+                    <div className={styles.choose}>
+                        {["All", "Manager", "Admin", "User"].map(r => (
+                            <div
+                                key={r}
+                                className={`${styles.variant} ${filterRole === r ? styles.selected : ""}`}
+                                onClick={() => setFilterRole(r)}
+                            >
+                                {r}
+                            </div>
+                        ))}
+                    </div>
+
+                    <p>Сортування</p>
+                    <div className={styles.choose}>
+                        {["None", "Name", "Email"].map(s => (
+                            <div
+                                key={s}
+                                className={`${styles.variant} ${filterSort === s ? styles.selected : ""}`}
+                                onClick={() => setFilterSort(s)}
+                            >
+                                {s}
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
+
+            {selectedUsers.length === 0 && (
+                <div className={styles.simple}>
+                    <p><i>Центр управління користувачами: всі, хто підключений до нашого сервісу, в одному місці</i></p>
+                </div>
+            )}
+
+            {selectedUsers.length > 0 && (
+                <div className={styles.menu}>
+                    <p>Вибрано користувачів: {selectedUsers.length}</p>
+                    <div>
+                        <IconButton onClick={deleteSelected}>
+                            <Delete sx={{ fontSize: "32px", color: "white" }} />
+                        </IconButton>
+
+                        <IconButton onClick={() => setSelectedUsers([])}>
+                            <Clear sx={{ fontSize: "32px", color: "white" }} />
+                        </IconButton>
+                    </div>
+                </div>
+            )}
+
+            <div className={styles.cardsUser}>
+                {filteredUsers.map(user => (
+                    <div
+                        key={user.id}
+                        className={`${styles.cardUser} ${selectedUsers.includes(user.id) ? styles.selected : ""}`}
+                        style={{
+                            cursor:
+                                role === "Manager" ||
+                                (role === "Admin" && user.role === "User")
+                                    ? "pointer"
+                                    : "default"
+                        }}
+                        onClick={() => {
+                            if (role === "Manager") changeSelect(user.id);
+                            if (role === "Admin" && user.role === "User") changeSelect(user.id);
+                        }}
+                    >
+                        <div className={styles.dataUser}>
+                            <span>ID: {user.id}</span>
+                            <span>Role: {user.role}</span>
+                            <span>Name: {user.name}</span>
+                            <span>Email: {user.email}</span>
+                        </div>
+
+                        <div className={styles.selectionUser}>
+                            {role === "Manager" && (
+                                <IconButton
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        setId(user.id);
+                                        setCurrentRole(user.role);
+                                        setModalOpen(true);
+                                    }}
+                                >
+                                    <Edit sx={{ color: "white" }} />
+                                </IconButton>
+                            )}
+                        </div>
+                    </div>
+                ))}
+            </div>
+
+            <div className={styles.iconsUsers}>
+                <IconButton
+                    onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+                    sx={{ backgroundColor: "#ec813f", color: "white", transition: "0.3s", "&:hover": { backgroundColor: "#26382e" } }}
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                        <path fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m8 6l4-4l4 4m-4-4v20" />
+                    </svg>
+                </IconButton>
+                <IconButton
+                    onClick={() => setRefresh(prev => prev + 1)}
+                    sx={{
+                        backgroundColor: "#ec813f",
+                        color: "white",
+                        "&:hover": { backgroundColor: "#26382e" }
+                    }}
+                >
+                    <Refresh />
+                </IconButton>
+            </div>
+
+            {modalOpen && (
+                <ModalUser
+                    role={currentRole}
+                    id={id}
+                    setOpen={setModalOpen}
+                    onSuccess={() => setRefresh(prev => prev + 1)}
+                />
+            )}
         </div>
-    )
+    );
 }

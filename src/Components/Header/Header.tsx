@@ -1,5 +1,6 @@
 import { Avatar, Box } from "@mui/material";
 import logo from "../../assets/crm.png";
+import { DataArray, Portrait } from "@mui/icons-material";
 
 export default function Header({color}:{color?:string}) {
   return (
@@ -18,7 +19,7 @@ export default function Header({color}:{color?:string}) {
         zIndex:999
       }}
     >
-      <Avatar src={logo} sx={{ width: 30, height: 30 ,backgroundColor:"white", padding:"4px"}} />
+      <Portrait/>
     </Box>
   );
 }

@@ -4,7 +4,12 @@ import { type ModalTarifProps } from "../../types/types"
 import { useState } from "react"
 import { putTarifs } from "../../api/tarifs.api";
 
-export default function ModalTarif({ tarif, setOpen }: ModalTarifProps) {
+export default function ModalTarif({
+    tarif,
+    setOpen,
+    onSuccess
+}: ModalTarifProps & { onSuccess: () => void }) {
+
     const [name, setName] = useState(tarif!.name);
     const [capacity, setCapacity] = useState(tarif!.internet_capacity);
     const [minutes, setMinutes] = useState(tarif!.minutes);
@@ -22,16 +27,21 @@ export default function ModalTarif({ tarif, setOpen }: ModalTarifProps) {
             alert("Ви нічого не змінили!");
             return;
         }
+
         try {
-            await putTarifs(tarif!.id, { 
-                id: tarif!.id, 
-                name: name, 
-                internet_capacity: capacity, 
-                minutes: minutes, 
-                price: price, 
-                additional: additional 
+            await putTarifs(tarif!.id, {
+                id: tarif!.id,
+                name,
+                internet_capacity: capacity,
+                minutes,
+                price,
+                additional
             });
+
             setOpen(false);
+
+            onSuccess();
+
         } catch (error) {
             alert(error);
         }
@@ -40,46 +50,60 @@ export default function ModalTarif({ tarif, setOpen }: ModalTarifProps) {
     return (
         <div className={styles.all}>
             <div className={styles.modal}>
-                <Typography variant="h6" sx={{color:"white"}}>Редагування тарифу</Typography>  
-                <TextField sx={{backgroundColor:"white",width:"80%",borderRadius:1}}
-                variant="filled"
+                <Typography variant="h6" sx={{ color: "white" }}>
+                    Редагування тарифу
+                </Typography>
+
+                <TextField
+                    sx={{ backgroundColor: "white", width: "80%", borderRadius: 1 }}
                     label="Назва"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                 />
-                <TextField sx={{backgroundColor:"white",width:"80%",borderRadius:1}}
-                variant="filled"
-                    label="Кількість Гб"
+
+                <TextField
+                    sx={{ backgroundColor: "white", width: "80%", borderRadius: 1 }}
+                    label="ГБ"
                     type="number"
                     value={capacity}
                     onChange={(e) => setCapacity(Number(e.target.value))}
                 />
-                <TextField sx={{backgroundColor:"white",width:"80%",borderRadius:1}}
-                variant="filled"
-                    label="Кількість Хв"
+
+                <TextField
+                    sx={{ backgroundColor: "white", width: "80%", borderRadius: 1 }}
+                    label="Хв"
                     type="number"
                     value={minutes}
                     onChange={(e) => setMinutes(Number(e.target.value))}
                 />
-                <TextField sx={{backgroundColor:"white",width:"80%",borderRadius:1}}
-                    variant="filled"
+
+                <TextField
+                    sx={{ backgroundColor: "white", width: "80%", borderRadius: 1 }}
                     label="Ціна"
                     type="number"
                     value={price}
                     onChange={(e) => setPrice(Number(e.target.value))}
                 />
-                <TextField sx={{backgroundColor:"white",width:"80%",borderRadius:1}}
-                    variant="filled"
+
+                <TextField
+                    sx={{ backgroundColor: "white", width: "80%", borderRadius: 1 }}
                     label="Додаткове"
                     value={additional}
                     onChange={(e) => setAdditional(e.target.value)}
                 />
 
                 <div className={styles.buttons}>
-                    <Button sx={{ backgroundColor: "#9ACFB1", color: "white" }} onClick={saveTarif}>
+                    <Button
+                        sx={{ backgroundColor: "#9ACFB1", color: "white" }}
+                        onClick={saveTarif}
+                    >
                         Зберегти
                     </Button>
-                    <Button sx={{ backgroundColor: "#ec813f", color: "white" }} onClick={() => setOpen(false)}>
+
+                    <Button
+                        sx={{ backgroundColor: "#ec813f", color: "white" }}
+                        onClick={() => setOpen(false)}
+                    >
                         Скасувати
                     </Button>
                 </div>
