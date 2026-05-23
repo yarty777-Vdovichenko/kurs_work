@@ -75,6 +75,16 @@ export type Stats = {
     blockedSims: number;
     newSubscribersLast7Days: number;
     totalTarifs: number;
+    simsByTarif:SimsByTarif[];
+    subscribersByDay:SubscribersByDay[];
+}
+export type SimsByTarif ={
+    tarifName:string,
+    count:number
+}
+export type SubscribersByDay ={
+    date:string,
+    count:number
 }
 export type Request ={
     id:string,
@@ -82,4 +92,9 @@ export type Request ={
     email:string,
     status:string,
     createdAt:string
+}
+export type ModalDelteTarif = {
+    id:string,
+    setOpen:React.Dispatch<React.SetStateAction<boolean>>
+    onSuccess?: () => void
 }

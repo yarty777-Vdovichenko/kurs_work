@@ -2,10 +2,19 @@ import { Avatar, Box, Button,  Typography } from "@mui/material";
 import back1 from "../../assets/back1.jpg";
 import logo from "../../assets/crm.png";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 export default function Home()
 {
     const navigate=useNavigate();
+    
+    useEffect(()=>{
+        if(localStorage.getItem("accessToken")){
+            localStorage.removeItem("accessToken");
+            localStorage.removeItem("refreshToken");
+            localStorage.removeItem("role");
+        }
+    },[])
 
     return(
         <>

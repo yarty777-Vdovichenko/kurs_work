@@ -36,6 +36,10 @@ export async function login(email:string,password:string) {
     }
 }
 
+export async function logOut(){
+    await api.post("/auth/logout")
+}
+
 export async function refreshToken() {
     const res = await api.post("/auth/refresh");
     return res.data.accessToken;

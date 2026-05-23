@@ -29,7 +29,9 @@ export default function ModalUser({sub,setOpen,onSuccess}:ModalSubProps){
     <div className={styles.all}>
         <div className={styles.modal}>
             <TextField 
-            sx={{backgroundColor:"white",borderRadius:1}} 
+            variant="filled"
+            label="ПІБ"
+            sx={{backgroundColor:"white",borderRadius:1,width:"100%"}} 
             value={name} 
             onChange={(e)=>{setName(e.target.value)}}></TextField>
             <div className={styles.buttons}>

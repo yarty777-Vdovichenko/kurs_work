@@ -1,8 +1,9 @@
 import { Box, Drawer } from "@mui/material";
-import { Dashboard, CreditCard, Group, ExitToApp, PersonOutline, BarChart, EditDocument } from "@mui/icons-material";
+import { Dashboard, CreditCard, Group, ExitToApp, PersonOutline, EditDocument } from "@mui/icons-material";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useRole } from "../../hooks/useRole";
+import { logOut } from "../../api/auth.api";
 
 export default function LeftPanel({open,setOpen}:{open:boolean;setOpen:(value:boolean)=>void}) {
   const [clicked,setClicked]=useState("Дашборд");
@@ -15,8 +16,7 @@ export default function LeftPanel({open,setOpen}:{open:boolean;setOpen:(value:bo
       { text: "Тарифи", icon: <CreditCard />, path: "tarifs" },
       { text: "Абоненти", icon: <Group />, path: "abonents" },
       { text: "Користувачі", icon: <PersonOutline />, path: "users", roles: ["Admin", "Manager"] },
-      { text: "Заявки", icon: <EditDocument />, path: "applications", roles: ["Manager"] },
-      { text: "Аналітика", icon: <BarChart />, path: "charts", roles: ["Manager"] },
+      { text: "Заявки", icon: <EditDocument />, path: "applications", roles: ["Admin",  "Manager"] },
   ].filter(item => !item.roles || item.roles.includes(role ?? ""));
   
   return (
@@ -72,7 +72,16 @@ export default function LeftPanel({open,setOpen}:{open:boolean;setOpen:(value:bo
       </Box>
       <Box>
         <Box
-        onClick={()=>navigate("../")}
+        onClick={async () => {
+              try {
+                  await logOut();
+              } finally {
+                  localStorage.removeItem("accessToken");
+                  localStorage.removeItem("refreshToken");
+                  localStorage.removeItem("role");
+                  navigate("/");
+              }
+          }}
             sx={{
               display: "flex",
               alignItems: "center",
