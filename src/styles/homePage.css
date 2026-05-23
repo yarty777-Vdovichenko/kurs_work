@@ -1,0 +1,60 @@
+.backgroud{
+    height: 100vh;
+    width: 100%;
+    background-color: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.hero{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 60px;
+}
+.text{
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    text-align: left;
+}
+.info__header{
+    color: white;
+    font-weight: 500;
+    font-size: 48px;
+}
+.info__header--purple{
+    opacity: 1 !important;
+    color: #BA6EED !important;
+    font-weight: 900 !important;
+    font-size: 48px !important;
+}
+.info__additional{
+    color: white;
+    font-weight: 100;
+    font-size: 18px;
+}
+.buttons{
+    
+    display: flex;
+    flex-direction: column;
+    width: 400px;
+}
+.buttons button:first-child{
+    margin-right: 40px;
+}
+.buttons button:last-child{
+    margin-left: 40px;
+}
+.svg--left{
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    z-index: 0;
+}
+.svg--right{
+    position: absolute;
+    bottom: 0px;
+    right: 0px;
+}
