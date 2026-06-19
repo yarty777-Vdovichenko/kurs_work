@@ -10,7 +10,7 @@ export default function Header({color}:{color?:string}) {
         py: 1,
         px: 2,
         height:"50px",
-        backgroundColor: !color ? "#4DA3FF" : "#1F4F34",
+        backgroundColor: color,
         display: "flex",
         alignItems: "center",
         gap: 2,

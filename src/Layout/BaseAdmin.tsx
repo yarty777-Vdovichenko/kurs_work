@@ -12,7 +12,7 @@ export default function BaseAdmin()
     return(
         <>
             <LeftPanel open={open} setOpen={setOpen}/>
-            <Header color="green" />
+            <Header color="#1F4F34" />
             <Box sx={{
                 paddingTop:"50px",
                 paddingLeft:open ? "170px" : "50px",
