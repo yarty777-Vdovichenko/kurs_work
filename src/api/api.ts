@@ -1,4 +1,6 @@
 import axios from "axios";
+import { store } from "../store/store";
+import { clearAuth, setAccessToken } from "../store/authSlice";
 
 export const api = axios.create({
     baseURL: import.meta.env.VITE_API_URL,
@@ -7,7 +9,7 @@ export const api = axios.create({
 });
 
 api.interceptors.request.use((config) => {
-    const token = localStorage.getItem("accessToken");
+    const token = store.getState().auth.accessToken;
 
     if (token && !config.url?.includes("/auth/refresh")) {
         config.headers.Authorization = `Bearer ${token}`;
@@ -25,9 +27,7 @@ api.interceptors.response.use(
 
         if (original.url?.includes("/auth/refresh")) {
             isRefreshing = false;
-            localStorage.removeItem("accessToken");
-            localStorage.removeItem("refreshToken");
-            localStorage.removeItem("role");
+            store.dispatch(clearAuth())
             window.location.href = "/login";
             return Promise.reject(error);
         }
@@ -36,21 +36,17 @@ api.interceptors.response.use(
             isRefreshing = true;
 
             try {
-                const refreshToken = localStorage.getItem("refreshToken");
-                const response = await api.post("/auth/refresh", { refreshToken });
+                const response = await api.post("/auth/refresh");
 
-                const { accessToken, refreshToken: newRefreshToken } = response.data;
-                localStorage.setItem("accessToken", accessToken);
-                localStorage.setItem("refreshToken", newRefreshToken);
+                const { accessToken} = response.data;
+                store.dispatch(setAccessToken(accessToken))
 
                 isRefreshing = false;
                 original.headers.Authorization = `Bearer ${accessToken}`;
                 return api(original);
             } catch {
                 isRefreshing = false;
-                localStorage.removeItem("accessToken");
-                localStorage.removeItem("refreshToken");
-                localStorage.removeItem("role");
+                store.dispatch(clearAuth())
                 window.location.href = "/login";
             }
         }
