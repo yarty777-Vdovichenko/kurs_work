@@ -6,6 +6,8 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { login } from "../../api/auth.api";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { loginStart, loginSuccess } from "../../store/authSlice";
 
 export default function Login()
 {
@@ -15,16 +17,16 @@ export default function Login()
     const navigate= useNavigate();
     const [loading,setLoading]=useState(false);
     const [error, setError] = useState<string>("");
-
+    const dispatch = useDispatch();
     const  userLogin = async () =>
     {
         try
         {
             setLoading(true);
             setError("");
-
-            await login(email,password);
-            
+            dispatch(loginStart())
+            const {accessToken,role} = await login(email,password);
+            dispatch(loginSuccess({accessToken,role}))
             navigate("/srm/dashboard")
         }
         catch (Eror:any)

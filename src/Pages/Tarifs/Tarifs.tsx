@@ -1,15 +1,13 @@
 import { IconButton, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
 import TarifDrawer from "../../Components/TarifDrawer/TarifDrawer.tsx";
-import styles from "./Tarifs.module.css";
+import "../../styles/table.css";
 import { Clear, Delete, Edit, FilterAlt, Refresh } from "@mui/icons-material";
 import { type Tarif } from "../../types/types.ts";
 import { getTarifs } from "../../api/tarifs.api";
 import ModalTarif from "../../Components/ModalTarif/ModalTarif.tsx";
 import ModalDeleteTarif from "../../Components/ModalDeleteTarif/ModalDeleteTarif.tsx";
 import { useRole } from "../../hooks/useRole.ts";
-
-const selected = { backgroundColor: "#52b57d" };
 
 export default function Tarifs() {
     const [open, setOpen] = useState(false);
@@ -31,7 +29,7 @@ export default function Tarifs() {
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
     const [tarifToDelete, setTarifToDelete] = useState<string>("");
 
-    const [refresh, setRefresh] = useState(0); // 🔥 ONLY ADD
+    const [refresh, setRefresh] = useState(0);
 
     const role = useRole();
 
@@ -69,7 +67,7 @@ export default function Tarifs() {
 
     useEffect(() => {
         loadTarifs();
-    }, [refresh]); // 🔥 ONLY CHANGE
+    }, [refresh]);
 
     function changeSelect(id: string) {
         setSelectedTarifs(prev =>
@@ -94,158 +92,157 @@ export default function Tarifs() {
     }
 
     return (
-        <div className={styles.mainUser}>
+    <div className="tarifs-main">
 
-            <div className={styles.search}>
+        <div className="tarifs-search">
 
-                <TextField
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                    placeholder="Пошук тарифу..."
-                    sx={{
-                        backgroundColor: "white",
-                        flex: 1,
-                        borderRadius: 1
-                    }}
-                />
+            <TextField
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Пошук тарифу..."
+                sx={{
+                    backgroundColor: "white",
+                    flex: 1,
+                    borderRadius: 1
+                }}
+            />
 
-                <IconButton onClick={() => setSearch("")}>
-                    <Clear sx={{ color: "white" }} />
-                </IconButton>
+            <IconButton onClick={() => setSearch("")}>
+                <Clear sx={{ color: "white" }} />
+            </IconButton>
 
-                <IconButton
-                    onClick={() => {
-                        setOpenFilter(prev => !prev);
-                        setFilterSort("None");
-                    }}
-                >
-                    <FilterAlt sx={{ fontSize: "28px", color: "white" }} />
-                </IconButton>
+            <IconButton
+                onClick={() => {
+                    setOpenFilter(prev => !prev);
+                    setFilterSort("None");
+                }}
+            >
+                <FilterAlt sx={{ fontSize: "28px", color: "white" }} />
+            </IconButton>
 
-            </div>
+        </div>
 
-            {openFilter && (
-                <div className={styles.filterMenu}>
+        {openFilter && (
+            <div className="tarifs-filter-menu">
 
-                    <p>Сортування</p>
+                <p>Сортування</p>
 
-                    <div className={styles.choose}>
-
-                        <div
-                            className={`${styles.variant} ${filterSort === "None" ? styles.selected : ""}`}
-                            onClick={() => setFilterSort("None")}
-                        >
-                            Без сортування
-                        </div>
-
-                        <div
-                            className={`${styles.variant} ${filterSort === "Name" ? styles.selected : ""}`}
-                            onClick={() => setFilterSort("Name")}
-                        >
-                            За назвою
-                        </div>
-
-                        <div
-                            className={`${styles.variant} ${filterSort === "Price" ? styles.selected : ""}`}
-                            onClick={() => setFilterSort("Price")}
-                        >
-                            За ціною
-                        </div>
-
-                    </div>
-
-                </div>
-            )}
-
-            {selectedTarifs.length === 0 && (
-                <div className={styles.simple}>
-                    <p><i>Список доступних тарифів</i></p>
-                </div>
-            )}
-
-            {selectedTarifs.length > 0 && (
-                <div className={styles.menu}>
-
-                    <p>Вибрано тарифів: {selectedTarifs.length}</p>
-
-                    <div>
-
-                        <IconButton onClick={deleteSelected}>
-                            <Delete sx={{ fontSize: "32px", color: "white" }} />
-                        </IconButton>
-
-                        <IconButton onClick={() => setSelectedTarifs([])}>
-                            <Clear sx={{ fontSize: "32px", color: "white" }} />
-                        </IconButton>
-
-                    </div>
-
-                </div>
-            )}
-
-            <div className={styles.cardsUser}>
-
-                {displayedTarifs.map(tarif => (
+                <div className="tarifs-choose">
 
                     <div
-                        key={tarif.id}
-                        className={`${styles.cardUser} ${selectedTarifs.includes(tarif.id) ? styles.selected : ""}`}
-                        onClick={() => {
-                            if(role!=="User"){
-                                changeSelect(tarif.id);
-                                setOpen(false);
-                            }
-                        }}
+                        className={`tarifs-variant ${filterSort === "None" ? "selected" : ""}`}
+                        onClick={() => setFilterSort("None")}
                     >
-
-                        <div className={styles.dataUser}>
-
-                            <span>ID: {tarif.id}</span>
-                            <span>Назва: {tarif.name}</span>
-                            <span>Інтернет: {tarif.internet_capacity}</span>
-                            <span>Хвилини: {tarif.minutes}</span>
-                            <span>Додатково: {tarif.additional}</span>
-                            <span>Ціна: {tarif.price}</span>
-
-                        </div>
-
-                        <div
-                            className={styles.selectionUser}
-                            style={selectedTarifs.includes(tarif.id) ? selected : {}}
-                        >
-                            {role!=="User" &&
-                                <IconButton
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        setEditedTarif(tarif);
-                                        setModalOpen(true);
-                                    }}
-                                >
-                                    <Edit sx={{ color: "white" }} />
-                                </IconButton>
-                            }
-
-                        </div>
-
+                        Без сортування
                     </div>
-                ))}
+
+                    <div
+                        className={`tarifs-variant ${filterSort === "Name" ? "selected" : ""}`}
+                        onClick={() => setFilterSort("Name")}
+                    >
+                        За назвою
+                    </div>
+
+                    <div
+                        className={`tarifs-variant ${filterSort === "Price" ? "selected" : ""}`}
+                        onClick={() => setFilterSort("Price")}
+                    >
+                        За ціною
+                    </div>
+
+                </div>
 
             </div>
+        )}
 
-            <div className={`${styles.iconsUsers} ${open ? styles.open : ""}`}>
+        {selectedTarifs.length === 0 && (
+            <div className="tarifs-simple">
+                <p><i>Список доступних тарифів</i></p>
+            </div>
+        )}
 
-                <IconButton
-                    onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-                    sx={{ backgroundColor: "#ec813f", color: "white", transition: "0.3s", "&:hover": { backgroundColor: "#26382e" } }}
+        {selectedTarifs.length > 0 && (
+            <div className="tarifs-menu">
+
+                <p>Вибрано тарифів: {selectedTarifs.length}</p>
+
+                <div>
+
+                    <IconButton onClick={deleteSelected}>
+                        <Delete sx={{ fontSize: "32px", color: "white" }} />
+                    </IconButton>
+
+                    <IconButton onClick={() => setSelectedTarifs([])}>
+                        <Clear sx={{ fontSize: "32px", color: "white" }} />
+                    </IconButton>
+
+                </div>
+
+            </div>
+        )}
+
+        <div className="tarifs-cards">
+
+            {displayedTarifs.map(tarif => (
+
+                <div
+                    key={tarif.id}
+                    className={`tarifs-card ${selectedTarifs.includes(tarif.id) ? "selected" : ""}`}
+                    onClick={() => {
+                        if (role !== "User") {
+                            changeSelect(tarif.id);
+                            setOpen(false);
+                        }
+                    }}
                 >
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                        <path fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m8 6l4-4l4 4m-4-4v20" />
-                    </svg>
-                </IconButton>
-                
 
-                {role!=="User" &&
-                    <IconButton
+                    <div className="tarifs-data">
+
+                        <span>ID: {tarif.id}</span>
+                        <span>Назва: {tarif.name}</span>
+                        <span>Інтернет: {tarif.internet_capacity}</span>
+                        <span>Хвилини: {tarif.minutes}</span>
+                        <span>Додатково: {tarif.additional}</span>
+                        <span>Ціна: {tarif.price}</span>
+
+                    </div>
+
+                    <div
+                        className="tarifs-selection"
+                        style={selectedTarifs.includes(tarif.id) ? { backgroundColor: "#52b57d" } : {}}
+                    >
+                        {role !== "User" &&
+                            <IconButton
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    setEditedTarif(tarif);
+                                    setModalOpen(true);
+                                }}
+                            >
+                                <Edit sx={{ color: "white" }} />
+                            </IconButton>
+                        }
+
+                    </div>
+
+                </div>
+            ))}
+
+        </div>
+
+        <div className={`tarifs-icons ${open ? "open" : ""}`}>
+
+            <IconButton
+                onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+                sx={{ backgroundColor: "#ec813f", color: "white", transition: "0.3s", "&:hover": { backgroundColor: "#26382e" } }}
+            >
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                    <path fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m8 6l4-4l4 4m-4-4v20" />
+                </svg>
+            </IconButton>
+
+            {role !== "User" &&
+                <IconButton
                     onClick={() => setOpen(true)}
                     sx={{ backgroundColor: "#ec813f", color: "white", transition: "0.3s", "&:hover": { backgroundColor: "#26382e" } }}
                 >
@@ -253,46 +250,46 @@ export default function Tarifs() {
                         <path fill="currentColor" d="M18 12.998h-5v5a1 1 0 0 1-2 0v-5H6a1 1 0 0 1 0-2h5v-5a1 1 0 0 1 2 0v5h5a1 1 0 0 1 0 2" />
                     </svg>
                 </IconButton>
-                }
+            }
 
-                <IconButton
-                    onClick={() => setRefresh(prev => prev + 1)}
-                    sx={{
-                        backgroundColor: "#ec813f",
-                        color: "white",
-                        "&:hover": { backgroundColor: "#26382e" }
-                    }}
-                >
-                    <Refresh />
-                </IconButton>
-
-            </div>
-
-             {open && (
-                <div className={styles.drawer}>
-                    <TarifDrawer setOpen={setOpen} />
-                </div>
-            )}
-
-            {modalOpen && editedTarif && (
-                <ModalTarif
-                    tarif={editedTarif}
-                    setOpen={setModalOpen}
-                    onSuccess={() => setRefresh(prev => prev + 1)}
-                />
-            )}
-
-            {deleteModalOpen && (
-                <ModalDeleteTarif
-                    id={tarifToDelete}
-                    setOpen={setDeleteModalOpen}
-                    onSuccess={() => {
-                        setRefresh(prev => prev + 1);
-                        setSelectedTarifs([]);
-                    }}
-                />
-            )}
+            <IconButton
+                onClick={() => setRefresh(prev => prev + 1)}
+                sx={{
+                    backgroundColor: "#ec813f",
+                    color: "white",
+                    "&:hover": { backgroundColor: "#26382e" }
+                }}
+            >
+                <Refresh />
+            </IconButton>
 
         </div>
-    );
+
+        {open && (
+            <div className="tarifs-drawer">
+                <TarifDrawer setOpen={setOpen} />
+            </div>
+        )}
+
+        {modalOpen && editedTarif && (
+            <ModalTarif
+                tarif={editedTarif}
+                setOpen={setModalOpen}
+                onSuccess={() => setRefresh(prev => prev + 1)}
+            />
+        )}
+
+        {deleteModalOpen && (
+            <ModalDeleteTarif
+                id={tarifToDelete}
+                setOpen={setDeleteModalOpen}
+                onSuccess={() => {
+                    setRefresh(prev => prev + 1);
+                    setSelectedTarifs([]);
+                }}
+            />
+        )}
+
+    </div>
+);
 }

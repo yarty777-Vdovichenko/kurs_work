@@ -1,18 +1,20 @@
-.mainUser{
-    padding:20px;
+.tarifs-main {
+    padding: 20px;
     background-color: #0B2E1C;
     width: 100%;
-    min-height: calc(100vh - 50px) ;
+    min-height: calc(100vh - 50px);
     display: flex;
     flex-direction: column;
-    gap:20px;
+    gap: 20px;
 }
-.search{
-    display: flex;  
+
+.tarifs-search {
+    display: flex;
 }
-.simple{
+
+.tarifs-simple {
     height: 88px;
-    display: flex;  
+    display: flex;
     align-items: center;
     padding: 20px;
     color: white;
@@ -20,7 +22,8 @@
     background-color: #234230;
     animation: menuApear 0.4s ease;
 }
-.menu{
+
+.tarifs-menu {
     top: 70px;
     z-index: 90;
     position: sticky;
@@ -33,19 +36,25 @@
     align-items: center;
     animation: menuApear 0.4s ease;
 }
-@keyframes menuApear{
-    from{
+
+.tarifs-menu p {
+    font-size: 21px;
+}
+
+@keyframes menuApear {
+    from {
         opacity: 0;
         transform: translateY(-10px);
     }
-    to{
+    to {
         opacity: 1;
         transform: translateY(0px);
     }
 }
-.filterMenu{
+
+.tarifs-filter-menu {
     font-size: 18px;
-    display: flex;  
+    display: flex;
     flex-direction: column;
     padding: 20px;
     color: white;
@@ -54,30 +63,32 @@
     animation: menuApear 0.4s ease;
     gap: 20px;
 }
-.choose{
+
+.tarifs-choose {
     font-size: 15px;
     display: flex;
     gap: 20px;
 }
-.variant{
+
+.tarifs-variant {
     padding: 10px;
     border-radius: 10px;
     background-color: #397252;
     transition: 0.3s;
 }
-.variant:hover{
+
+.tarifs-variant:hover {
     background-color: #275b3d;
     cursor: pointer;
 }
-.selected{
+
+.tarifs-variant.selected {
     background-color: #54be82;
-    box-shadow: 0 6px 12px rgba(0,0,0,0.4);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
     transform: translateY(-4px);
 }
-.menu p{
-    font-size: 21px;
-}
-.cardsUser{
+
+.tarifs-cards {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     background-color: #1F4F34;
@@ -85,7 +96,8 @@
     border-radius: 20px;
     gap: 20px;
 }
-.cardUser{
+
+.tarifs-card {
     background-color: #397252;
     border-radius: 20px;
     color: white;
@@ -98,48 +110,55 @@
     transition: 0.3s;
     animation: menuApear 0.4s ease;
 }
-.cardUser.selected{
+
+.tarifs-card.selected {
     background-color: #488261;
-    box-shadow: 0 6px 12px rgba(0,0,0,0.4);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
     transform: translateY(-2px);
 }
-.cardUser:hover{
+
+.tarifs-card:hover {
     transform: translateY(-5px);
 }
-.dataUser{
+
+.tarifs-data {
     margin: 30px;
     display: flex;
     flex-direction: column;
-    gap:5px;
+    gap: 5px;
 }
-.dataUser span:first-child{
+
+.tarifs-data span:first-child {
     font-size: 12px;
     opacity: 0.7;
 }
 
-.dataUser span:nth-child(2){
+.tarifs-data span:nth-child(2) {
     font-size: 18px;
     font-weight: 400;
 }
 
-.dataUser span:nth-child(3){
+.tarifs-data span:nth-child(3) {
     font-size: 18px;
     font-weight: 600;
 }
 
-.dataUser span:nth-child(4){
+.tarifs-data span:nth-child(4) {
     font-size: 14px;
     opacity: 0.8;
 }
-.selectionUser{
+
+.tarifs-selection {
     flex: 0.1;
     height: 100%;
     background-color: #397252;
     align-self: center;
     transition: background-color 0.2s;
-    border-top-right-radius: 20px;border-bottom-right-radius: 20px;
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
 }
-.iconsUsers{
+
+.tarifs-icons {
     position: fixed;
     top: 90%;
     right: 30px;
@@ -147,40 +166,42 @@
     gap: 15px;
     animation: moveRight 0.3s ease;
 }
-.iconsUsers.open{
+
+.tarifs-icons.open {
     right: 415px;
     animation: moveLeft 0.3s ease;
 }
+
 @keyframes moveLeft {
-    from{
-        right: 30px;
-    }
-    to{
-        right: 415px;
-    }
+    from { right: 30px; }
+    to { right: 415px; }
 }
+
 @keyframes moveRight {
-    from{
-        right: 415px;
-    }
-    to{
-        right: 30px;
-    }
+    from { right: 415px; }
+    to { right: 30px; }
 }
-.drawer{
+
+.tarifs-drawer {
     padding-top: 50px;
     position: fixed;
-    right:0px;
+    right: 0;
     top: 0;
     width: 400px;
-    height: 100vh;  
+    height: 100vh;
     animation: addMenuApear 0.3s ease;
 }
+
 @keyframes addMenuApear {
-    from{
-        right: -400px;
+    from { right: -400px; }
+    to { right: 0; }
+}
+
+@media (max-width: 700px) {
+    .tarifs-cards {
+        grid-template-columns: repeat(1, 1fr);
     }
-    to{
-        right: 0px;
-    }
+}
+.tarifs-card.selected .tarifs-selection {
+    background-color: #52b57d;
 }
