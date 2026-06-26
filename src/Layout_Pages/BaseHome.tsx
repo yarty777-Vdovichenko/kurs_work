@@ -7,7 +7,7 @@ export default function BaseHome()
 
     return(
         <>
-            <Header />
+            <Header color="#8B5CF6" />
             <Outlet/>
         </>
     )

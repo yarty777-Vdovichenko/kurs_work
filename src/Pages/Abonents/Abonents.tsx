@@ -4,7 +4,7 @@ import { Add, Clear, Delete, Edit, FilterAlt, Refresh, Search } from "@mui/icons
 import { type FilterStatus, type Tarif, type Sub } from "../../types/types.ts";
 import { deleteSim, deleteSub, filterSub, getSub, searchSub } from "../../api/subscriber.api.ts";
 import styles from "./Abonents.module.css";
-import SubDrawer from "../../Components/AbonentDrawer/AbonentDrawer.tsx";
+import SubDrawer from "../../Components/SubscriberDrawer/SubscriberDrawer.tsx";
 import { getTarifs } from "../../api/tarifs.api.ts";
 import EditSubModale from "../../Components/ModalSubscriber/ModalSubscriber.tsx";
 import AddSimModale from "../../Components/ModalAddSim/ModalAddSim.tsx";

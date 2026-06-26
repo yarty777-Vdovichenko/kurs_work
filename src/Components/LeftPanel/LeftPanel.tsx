@@ -2,13 +2,15 @@ import { Box, Drawer } from "@mui/material";
 import { Dashboard, CreditCard, Group, ExitToApp, PersonOutline, EditDocument } from "@mui/icons-material";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useRole } from "../../hooks/useRole";
 import { logOut } from "../../api/auth.api";
+import { useDispatch, useSelector } from "react-redux";
+import { clearAuth } from "../../store/authSlice";
+import type { RootState } from "../../store/store";
 
 export default function LeftPanel({open,setOpen}:{open:boolean;setOpen:(value:boolean)=>void}) {
   const [clicked,setClicked]=useState("Дашборд");
-  const role = useRole();
-
+  const role = useSelector((state: RootState) => state.auth.role);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const menuItems = [
@@ -76,9 +78,7 @@ export default function LeftPanel({open,setOpen}:{open:boolean;setOpen:(value:bo
               try {
                   await logOut();
               } finally {
-                  localStorage.removeItem("accessToken");
-                  localStorage.removeItem("refreshToken");
-                  localStorage.removeItem("role");
+                  dispatch(clearAuth())
                   navigate("/");
               }
           }}
