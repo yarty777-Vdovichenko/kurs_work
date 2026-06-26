@@ -4,7 +4,8 @@ import { deleteUser, getUsers } from "../../api/users.api.ts";
 import { Clear, Delete, Edit, FilterAlt, Refresh } from "@mui/icons-material";
 import ModalUser from "../../Components/ModalUser/ModalUser.tsx";
 import { type Role, type User } from "../../types/types.ts";
-import { useRole } from "../../hooks/useRole.ts";
+import type { RootState } from "../../store/store.ts";
+import { useSelector } from "react-redux";
 
 export default function Users() {
     const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
@@ -21,7 +22,7 @@ export default function Users() {
 
     const [refresh, setRefresh] = useState(0);
 
-    const role = useRole();
+    const role = useSelector((state: RootState) => state.auth.role);;
 
     async function loadUser() {
         try {

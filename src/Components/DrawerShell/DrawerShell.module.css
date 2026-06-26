@@ -1,7 +1,4 @@
-
-
-
-.drawerMain{
+.drawerMain {
     height: 100vh;
     width: 100%;
     padding-top: 10px;
@@ -9,17 +6,14 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    box-shadow: -12px 0px 12px rgba(0,0,0,0.6);
+    box-shadow: -12px 0px 12px rgba(0, 0, 0, 0.6);
     gap: 10px;
 }
-.drawerMain h3{
+
+.drawerMain h3 {
     color: white;
 }
-.drawerMain p{
+
+.drawerMain p {
     color: white;
-}
-@media(max-width:1000px){
-    .cardsUser{
-        grid-template-columns: 1fr;
-    }
 }
