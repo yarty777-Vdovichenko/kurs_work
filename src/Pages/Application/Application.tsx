@@ -68,14 +68,16 @@ export default function Application(){
                     <div className="buttons">
                         <Button 
                         sx={{
-                            width:"100%",backgroundColor:"#32ac67",color:"white","&:hover": { backgroundColor: "#6ce19f" }
+                            width:"100%",backgroundColor:"#32ac67",color:"white","&:hover": { backgroundColor: "#6ce19f" },
+                            "@media (max-width: 700px)": { width: "100px" }
                             }}
                             onClick={()=>{approve(ap.id)}}>
                             Прийняти
                         </Button>
                         <Button 
                         sx={{
-                            width:"100%",backgroundColor:"#ec813f",color:"white","&:hover": { backgroundColor: "#ff9f63" }
+                            width:"100%",backgroundColor:"#ec813f",color:"white","&:hover": { backgroundColor: "#ff9f63" },
+                            "@media (max-width: 700px)": { width: "100px" }
                             }}
                             onClick={()=>{refuse(ap.id)}}>
                             Відхилити

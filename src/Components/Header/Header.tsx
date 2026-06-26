@@ -9,7 +9,6 @@ export default function Header({color}:{color?:string}) {
   return (
     <Box
       sx={{
-        
         width: "100%",
         py: 1,
         px: 2,
@@ -24,7 +23,7 @@ export default function Header({color}:{color?:string}) {
       }}
     >
       <Avatar src={logo} sx={{ width: 30, height: 30 ,backgroundColor:"white", padding:"4px"}} />
-      <Typography sx={{color:"white"}}>
+      <Typography sx={{color:"white",fontSize:"22px",fontWeight:"600"}}>
         {role}
       </Typography>
     </Box>
