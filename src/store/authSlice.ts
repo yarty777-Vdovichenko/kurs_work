@@ -3,7 +3,7 @@ import type { Role } from "../types/types";
 
 interface AuthState {
     accessToken?: string|null,
-    role?: Role|null,
+    role: Role|null,
     error?: string|null
 }
 

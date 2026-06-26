@@ -7,7 +7,8 @@ import { type Tarif } from "../../types/types.ts";
 import { getTarifs } from "../../api/tarifs.api";
 import ModalTarif from "../../Components/ModalTarif/ModalTarif.tsx";
 import ModalDeleteTarif from "../../Components/ModalDeleteTarif/ModalDeleteTarif.tsx";
-import { useRole } from "../../hooks/useRole.ts";
+import type { RootState } from "../../store/store.ts";
+import { useSelector } from "react-redux";
 
 export default function Tarifs() {
     const [open, setOpen] = useState(false);
@@ -31,7 +32,7 @@ export default function Tarifs() {
 
     const [refresh, setRefresh] = useState(0);
 
-    const role = useRole();
+    const role = useSelector((state: RootState) => state.auth.role);
 
     useEffect(() => {
         let result = [...tarifs];
