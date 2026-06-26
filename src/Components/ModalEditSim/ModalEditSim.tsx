@@ -1,85 +1,75 @@
-import { Button, MenuItem, Select } from "@mui/material"
-import styles from "./ModalEditSim.module.css"
-import  { type Sim, type ModalEditSimProps, type Status, type Tarif } from "../../types/types"
+import { MenuItem, Select } from "@mui/material"
+import { type Sim, type ModalEditSimProps, type Status, type Tarif } from "../../types/types"
 import { useEffect, useState } from "react"
-import { getSimById,editSim } from "../../api/subscriber.api";
+import { getSimById, editSim } from "../../api/subscriber.api";
 import { getTarifs } from "../../api/tarifs.api";
+import { ModalShell } from "../Modal/ModalShell";
+import useModalForm from "../../hooks/useModalForm";
+import { ModaleTypography } from "../styled/ModaleComponents";
 
+export default function ModalEditSim({ subId, simId, setOpen, onSuccess }: ModalEditSimProps) {
+    const [tarifs, setTarifs] = useState<Tarif[]>()
+    const [tarifId, setTarifId] = useState<string>("1")
+    const [status, setStatus] = useState<Status>("active")
+    const [sim, setSim] = useState<Sim>()
 
-export default function ModalEditSim({subId,simId,setOpen,onSuccess}:ModalEditSimProps){
-    const [tarifs,setTarifs]=useState<Tarif[]>()
-    const [tarifId,setTarifId]=useState<string>("1")
-    const [status,setStatus]=useState<Status>("active")
-    const [sim,setSim]=useState<Sim>()
-
-    async function loadTarifs(){
-        try{
+    async function loadTarifs() {
+        try {
             const response = await getTarifs();
             setTarifs(response)
         }
-        catch(error:any)
-        {
+        catch (error: any) {
             console.log(error);
         }
     }
 
-    async function getsimCardById(){
-        try{
-            const simm = await getSimById({subId,simId});
+    async function getsimCardById() {
+        try {
+            const simm = await getSimById({ subId, simId });
             setStatus(simm.status);
             setTarifId(simm.tarifId);
             setSim(simm);
         }
-        catch(error:any)
-        {
+        catch (error: any) {
             console.log(error);
         }
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         loadTarifs();
         getsimCardById();
-    },[])
+    }, [])
 
-    async function PatchUserHelper(){
-        if(tarifId===""||tarifId==="1"){
+    const { handleSave } = useModalForm({
+        hasChanges: () => tarifId !== sim?.tarifId || status !== sim?.status,
+        onSave: () => editSim({ tarifId, status, subId, simId }),
+        setOpen,
+        onSuccess,
+        noChangesMessage: "Ви нічого не змінили"
+    });
+
+    function handleSaveWithValidation() {
+        if (tarifId === "" || tarifId === "1") {
             alert("Не коректний траиф");
             return;
         }
-        if(tarifId===sim?.tarifId&&status===sim?.status){
-            alert("Ви нічого не змінили")
-            return;
-        }
-        try{
-            await editSim({tarifId,status,subId,simId});
-            onSuccess?.()
-            setOpen(false);
-        }
-        catch(error){
-            alert(error);
-        }
+        handleSave();
     }
 
     return (
-    <div className={styles.all}>
-        <div className={styles.modal}>
-            <p style={{color:"white"}}>Статус</p>
-            <Select 
-            variant="filled"
-            sx={{backgroundColor:"white",width:"80%",borderRadius:1}}
-            value={status} onChange={(e)=>setStatus(e.target.value)}>
+        <ModalShell onSave={handleSaveWithValidation} onCancel={() => setOpen(false)}>
+            <ModaleTypography>Статус</ModaleTypography>
+            <Select
+                variant="filled"
+                sx={{ backgroundColor: "white", width: "80%", borderRadius: 1 }}
+                value={status} onChange={(e) => setStatus(e.target.value)}>
                 <MenuItem value={"active"}>Активна</MenuItem>
                 <MenuItem value={"blocked"}>Заблокована</MenuItem>
             </Select>
-            <p style={{color:"white"}}>Тариф</p>
-            <Select  sx={{backgroundColor:"white",width:"80%",borderRadius:1}} value={tarifId} onChange={(e) => setTarifId(e.target.value)}>
-                {tarifs?.map(tarif=><MenuItem key={tarif.id} value={tarif.id}>{tarif.name}</MenuItem>)}
+            <ModaleTypography>Тариф</ModaleTypography>
+            <Select sx={{ backgroundColor: "white", width: "80%", borderRadius: 1 }} value={tarifId} onChange={(e) => setTarifId(e.target.value)}>
+                {tarifs?.map(tarif => <MenuItem key={tarif.id} value={tarif.id}>{tarif.name}</MenuItem>)}
             </Select>
-                <div className={styles.buttons}>
-                <Button sx={{backgroundColor:"#9ACFB1",color:"white"}} onClick={()=>{PatchUserHelper()}}>Зберегти</Button>
-                <Button sx={{backgroundColor:"#ec813f",color:"white"}} onClick={()=>{setOpen(false)}}>Скасувати</Button>
-            </div>
-        </div>  
-    </div>
+        </ModalShell>
     )
 }
