@@ -1,16 +1,7 @@
 import type { Stats } from "../types/types";
 import { api } from "./api";
+import { apiRequest } from "./apiHelpers";
 
-export async function getStats():Promise<Stats>{
-    try{
-        const response = await api.get("/subs/stats")
-        return response.data
-    }
-    catch(error:any){
-        if (error.response){
-            throw error.response.data.message;
-        } else {
-            throw "Server error";
-        }
-    }
+export async function getStats(){
+    return apiRequest<Stats>(()=> api.get("/subs/stats"))
 }

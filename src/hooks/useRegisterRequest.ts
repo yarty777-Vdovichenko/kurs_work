@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { register } from "../api/auth.api";
+import useSnackbar from "./useSnackbar";
 
 function useRegisterRequest() {
+    const { showSnackbar } = useSnackbar();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string>("");
 
@@ -25,8 +27,8 @@ function useRegisterRequest() {
 
         try {
             setLoading(true);
-            const response = await register(name, "User", normalizedEmail, password);
-            setError(response);
+            await register(name, "User", normalizedEmail, password)
+            showSnackbar("Заяку відправлено, очікуйте відтвердження на електронну пошту!","success");
             return true;
         }
         catch (error: any) {
