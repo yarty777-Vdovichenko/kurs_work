@@ -98,3 +98,4 @@ export type ModalDelteTarif = {
     setOpen:React.Dispatch<React.SetStateAction<boolean>>
     onSuccess?: () => void
 }
+export type Type = "success" | "info" | "error" | "warning"

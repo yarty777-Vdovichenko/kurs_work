@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom";
 import Header from "../Components/Header/Header";
-import LeftPanel from "../Components/LeftPanel/LeftPanel";
+import LeftPanel from "../Components/Drawers/LeftPanel";
 import { useState } from "react";
 import { Box } from "@mui/material";
 

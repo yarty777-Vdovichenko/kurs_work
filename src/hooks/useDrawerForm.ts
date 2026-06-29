@@ -1,4 +1,5 @@
 import { useState } from "react";
+import useSnackbar from "./useSnackbar";
 
 interface UseDrawerFormOptions {
     validate?: () => string | null;
@@ -8,37 +9,34 @@ interface UseDrawerFormOptions {
 }
 
 function useDrawerForm(options: UseDrawerFormOptions) {
-    const [error, setError] = useState<string>("");
-    const [created, setCreated] = useState<string>("");
+    const { showSnackbar } = useSnackbar();
+    const [loading, setLoading] = useState(false);
 
     const handleSave = async () => {
-        setError("");
-        setCreated("");
-
         if (options.validate) {
             const validationError = options.validate();
             if (validationError) {
-                setError(validationError);
+                showSnackbar(validationError, "warning");
                 return;
             }
         }
 
         try {
+            setLoading(true);
             await options.onSave();
-            setCreated(options.successMessage ?? "Created");
+            showSnackbar(options.successMessage ?? "Created", "success");
             options.onSuccess?.();
         }
-        catch (error: any) {
-            setError(error.message ?? error);
+        catch (error) {
+            const message = error instanceof Error ? error.message : String(error);
+            showSnackbar(message, "error");
+        }
+        finally {
+            setLoading(false);
         }
     };
 
-    const resetMessages = () => {
-        setError("");
-        setCreated("");
-    };
-
-    return { handleSave, error, created, resetMessages };
+    return { handleSave, loading };
 }
 
 export default useDrawerForm;

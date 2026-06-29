@@ -1,16 +1,29 @@
-import { IconButton, TextField } from "@mui/material";
+import { Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, TextField } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
-import { Add, Clear, Delete, Edit, FilterAlt, Refresh, Search } from "@mui/icons-material";
+import { Add, Clear, Edit, FilterAlt, Search } from "@mui/icons-material";
 import { type FilterStatus, type Tarif, type Sub } from "../../types/types.ts";
 import { deleteSim, deleteSub, filterSub, getSub, searchSub } from "../../api/subscriber.api.ts";
 import styles from "./Abonents.module.css";
-import SubDrawer from "../../Components/SubscriberDrawer/SubscriberDrawer.tsx";
+import SubDrawer from "../../Components/Drawers/SubscriberDrawer.tsx";
 import { getTarifs } from "../../api/tarifs.api.ts";
-import EditSubModale from "../../Components/ModalSubscriber/ModalSubscriber.tsx";
-import AddSimModale from "../../Components/ModalAddSim/ModalAddSim.tsx";
-import ModalEditSim from "../../Components/ModalEditSim/ModalEditSim.tsx";
+import EditSubModale from "../../Components/Modals/ModalSubscriber.tsx";
+import AddSimModale from "../../Components/Modals/ModalAddSim.tsx";
+import ModalEditSim from "../../Components/Modals/ModalEditSim.tsx";
+import useRefresh from "../../hooks/useRefresh.ts";
+import { FloatingActionButtons } from "../../Components/FloatingActionButtons/FloatingActionButtons.tsx";
+import { SelectionBar } from "../../Components/SelectionBar/SelectionBar.tsx";
+import { SubscriberSimRows } from "./SubscriberSimRows.tsx";
+import useSnackbar from "../../hooks/useSnackbar.ts";
+import useConfirm from "../../hooks/useConfirm.ts";
 
 export default function Abonents() {
+    const [isLoading, setIsLoading] = useState(true);
+
+    const { confirm, openDialog, message, handleConfirm, handleCancel } = useConfirm();
+
+    const {showSnackbar} = useSnackbar();
+    const { refresh, triggerRefresh } = useRefresh();
+
     const [open, setOpen] = useState(false);
     const [openFilter, setOpenFilter] = useState(false);
     const [expandedSub, setExpandedSub] = useState<string | null>(null);
@@ -34,29 +47,28 @@ export default function Abonents() {
     const [curId, setCurId] = useState("");
     const [curSimId, setSimCurId] = useState("");
 
-    const [refresh, setRefresh] = useState(0);
-
     const isSearchMode = useRef(false);
     const lastSearch = useRef({ name: "", phone: "" });
 
-    async function loadData(page: number) {
+   async function loadData(page: number) {
         try {
+            setIsLoading(true);
+            let res;
             if (isSearchMode.current) {
                 const { name, phone } = lastSearch.current;
-                const res = await searchSub(page, name, phone);
-                setAbonents(res.items);
-                setTotalPages(res.totalPages);
+                res = await searchSub(page, name, phone);
             } else if (filterSim !== "" || filterTarif !== "") {
-                const res = await filterSub(page, filterSim, filterTarif);
-                setAbonents(res.items);
-                setTotalPages(res.totalPages);
+                res = await filterSub(page, filterSim, filterTarif);
             } else {
-                const res = await getSub(page);
-                setAbonents(res.items);
-                setTotalPages(res.totalPages);
+                res = await getSub(page);
             }
+            setAbonents(res.items);
+            setTotalPages(res.totalPages);
         } catch (err) {
             console.error(err);
+        }
+        finally{
+            setIsLoading(false);
         }
     }
 
@@ -92,18 +104,14 @@ export default function Abonents() {
         const hasDigit = [...search].some(c => "0123456789".includes(c));
         const name = hasDigit ? "" : search;
         const phone = hasDigit ? search : "";
+        
         lastSearch.current = { name, phone };
         isSearchMode.current = true;
         setFilterSim("");
         setFilterTarif("");
         setCurrentPage(1);
-        try {
-            const res = await searchSub(1, name, phone);
-            setAbonents(res.items);
-            setTotalPages(res.totalPages);
-        } catch (err) {
-            console.error(err);
-        }
+        
+        await loadData(1);
     }
 
     function handleClearSearch() {
@@ -111,7 +119,7 @@ export default function Abonents() {
         isSearchMode.current = false;
         lastSearch.current = { name: "", phone: "" };
         setCurrentPage(1);
-        setRefresh(prev => prev + 1);
+        triggerRefresh()
     }
 
     function changeSelect(id: string) {
@@ -121,21 +129,25 @@ export default function Abonents() {
     }
 
     async function deleteSelected() {
-        if (!window.confirm("Ви впевнені, що хочете видалити вибраних абонентів?")) return;
+        const isConfirmed = await confirm("Ви впевнені?");
+        if (!isConfirmed) return;
         try {
             await Promise.all(selectedAbonents.map(deleteSub));
             setSelectedAbonents([]);
-            setRefresh(prev => prev + 1);
-        } catch (err) {
-            console.error(err);
-            alert(err);
+            triggerRefresh()
+            showSnackbar("Абонентів видалено", "success");
+        } catch (error) {
+            console.error(error);
+            const message = error instanceof Error ? error.message : String(error);
+            showSnackbar(message,"error");
         }
     }
 
     async function deleteSimm({ subId, simId }: { subId: string; simId: string }) {
         try {
             await deleteSim({ subId, simId });
-            setRefresh(prev => prev + 1);
+            triggerRefresh()
+            showSnackbar("Сімкарту видалено", "success");
         } catch (err) {
             console.error(err);
         }
@@ -204,22 +216,17 @@ export default function Abonents() {
                 </div>
             )}
 
-            {selectedAbonents.length === 0 ? (
-                <div className={styles.simple}><p><i>Список абонентів</i></p></div>
-            ) : (
-                <div className={styles.menu}>
-                    <p>Вибрано абонентів: {selectedAbonents.length}</p>
-                    <div>
-                        <IconButton onClick={deleteSelected}>
-                            <Delete sx={{ fontSize: "32px", color: "white" }} />
-                        </IconButton>
-                        <IconButton onClick={() => setSelectedAbonents([])}>
-                            <Clear sx={{ fontSize: "32px", color: "white" }} />
-                        </IconButton>
-                    </div>
-                </div>
-            )}
-
+            <SelectionBar
+                selectedCount={selectedAbonents.length}
+                placeholder="Список абонентів"
+                selectedLabel="Вибрано абонентів"
+                onDelete={deleteSelected}
+                onClear={() => setSelectedAbonents([])}
+                simpleClassName={styles.simple}
+                menuClassName={styles.menu}
+            />
+            {isLoading?<div className={styles.allCenter}><CircularProgress size={50} sx={{color:"white"}} /></div>:
+            <>
             <div className={styles.tableWrapper}>
                 <table className={styles.table}>
                     <thead>
@@ -285,59 +292,19 @@ export default function Abonents() {
                                 {expandedSub === ab.id && (
                                     <tr key={`${ab.id}-sims`} className={styles.simsRow}>
                                         <td colSpan={6}>
-                                            <div className={styles.simsTableWrapper}>
-                                                <table className={styles.simsTable}>
-                                                    <thead>
-                                                        <tr>
-                                                            <th>ID SIM</th>
-                                                            <th>Номер</th>
-                                                            <th>Статус</th>
-                                                            <th>Тариф</th>
-                                                            <th>Дата створення</th>
-                                                            <th>Дії</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        {ab.sims
-                                                            .filter(sim => {
-                                                                const matchStatus = filterSim === "" || sim.status === filterSim;
-                                                                const matchTarif = filterTarif === "" || sim.tarifId === filterTarif;
-                                                                return matchStatus && matchTarif;
-                                                            })
-                                                            .map(sim => (
-                                                                <tr key={sim.id} className={styles.simRow}>
-                                                                    <td className={styles.idCell}>{sim.id}</td>
-                                                                    <td>{sim.simNumber.startsWith("+") ? sim.simNumber : `+${sim.simNumber}`}</td>
-                                                                    <td>
-                                                                        <span className={`${styles.statusBadge} ${styles[sim.status]}`}>
-                                                                            {sim.status}
-                                                                        </span>
-                                                                    </td>
-                                                                    <td>{tarifs.find(t => t.id === sim.tarifId)?.name ?? "—"}</td>
-                                                                    <td>{formatDate(sim.createdAt)}</td>
-                                                                    <td>
-                                                                        <IconButton
-                                                                            size="small"
-                                                                            onClick={() => {
-                                                                                setCurId(ab.id);
-                                                                                setSimCurId(sim.id);
-                                                                                setModalEditSimOpen(true);
-                                                                            }}
-                                                                        >
-                                                                            <Edit sx={{ color: "white" }} />
-                                                                        </IconButton>
-                                                                        <IconButton
-                                                                            size="small"
-                                                                            onClick={() => deleteSimm({ subId: ab.id, simId: sim.id })}
-                                                                        >
-                                                                            <Delete sx={{ color: "white" }} />
-                                                                        </IconButton>
-                                                                    </td>
-                                                                </tr>
-                                                            ))}
-                                                    </tbody>
-                                                </table>
-                                            </div>
+                                            <SubscriberSimRows
+                                                sims={ab.sims}
+                                                tarifs={tarifs}
+                                                filterSim={filterSim}
+                                                filterTarif={filterTarif}
+                                                formatDate={formatDate}
+                                                onEditSim={(simId) => {
+                                                    setCurId(ab.id);
+                                                    setSimCurId(simId);
+                                                    setModalEditSimOpen(true);
+                                                }}
+                                                onDeleteSim={(simId) => deleteSimm({ subId: ab.id, simId })}
+                                            />
                                         </td>
                                     </tr>
                                 )}
@@ -346,6 +313,7 @@ export default function Abonents() {
                     </tbody>
                 </table>
             </div>
+            
 
             <div className={styles.pages}>
                 <IconButton
@@ -368,46 +336,40 @@ export default function Abonents() {
                     </svg>
                 </IconButton>
             </div>
+            </>
+            }
 
-            <div className={`${styles.iconsUsers} ${open ? styles.open : ""}`}>
-                <IconButton
-                    onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-                    sx={{ backgroundColor: "#ec813f", color: "white", transition: "0.3s", "&:hover": { backgroundColor: "#26382e" } }}
-                >
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                        <path fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m8 6l4-4l4 4m-4-4v20" />
-                    </svg>
-                </IconButton>
-                <IconButton
-                    onClick={() => setOpen(true)}
-                    sx={{ backgroundColor: "#ec813f", color: "white", transition: "0.3s", "&:hover": { backgroundColor: "#26382e" } }}
-                >
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                        <path fill="currentColor" d="M18 12.998h-5v5a1 1 0 0 1-2 0v-5H6a1 1 0 0 1 0-2h5v-5a1 1 0 0 1 2 0v5h5a1 1 0 0 1 0 2" />
-                    </svg>
-                </IconButton>
-                <IconButton
-                    onClick={() => setRefresh(prev => prev + 1)}
-                    sx={{ backgroundColor: "#ec813f", color: "white", transition: "0.3s", "&:hover": { backgroundColor: "#26382e" } }}
-                >
-                    <Refresh />
-                </IconButton>
-            </div>
+            <FloatingActionButtons
+                className={`${styles.iconsUsers} ${open ? styles.open : ""}`}
+                onAdd={() => setOpen(true)}
+                onRefresh={triggerRefresh}
+            />
 
             {open && (
                 <div className={styles.drawer}>
-                    <SubDrawer setOpen={setOpen} onSuccess={() => setRefresh(prev => prev + 1)} />
+                    <SubDrawer setOpen={setOpen} onSuccess={triggerRefresh} />
                 </div>
             )}
             {modalAddSimOpen && (
-                <AddSimModale setOpen={setAddSimModalOpen} subId={curId} onSuccess={() => setRefresh(prev => prev + 1)} />
+                <AddSimModale setOpen={setAddSimModalOpen} subId={curId} onSuccess={triggerRefresh} />
             )}
             {modalOpen && (
-                <EditSubModale setOpen={setModalOpen} sub={editedAbonent!} onSuccess={() => setRefresh(prev => prev + 1)} />
+                <EditSubModale setOpen={setModalOpen} sub={editedAbonent!} onSuccess={triggerRefresh} />
             )}
             {modalEditSimOpen && (
-                <ModalEditSim setOpen={setModalEditSimOpen} simId={curSimId} subId={curId} onSuccess={() => setRefresh(prev => prev + 1)} />
+                <ModalEditSim setOpen={setModalEditSimOpen} simId={curSimId} subId={curId} onSuccess={triggerRefresh} />
             )}
+            <Dialog open={openDialog} onClose={handleCancel}
+            PaperProps={{
+                sx: { backgroundColor: "#196441", color: "white" }
+            }}>
+                <DialogTitle sx={{fontSize:"22px",fontWeight:"700"}}>Підтвердження</DialogTitle>
+                <DialogContent>{message}</DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCancel} sx={{color:"#ec813f",fontWeight:"700"}}>Скасувати</Button>
+                    <Button onClick={handleConfirm} sx={{color:"#6beeb1",fontWeight:"700"}}>ОК</Button>
+                </DialogActions>
+            </Dialog>
         </div>
     );
 }
