@@ -1,4 +1,5 @@
 import { useState } from "react";
+import useSnackbar from "./useSnackbar";
 
 interface UseModalFormOptions {
     hasChanges: () => boolean;
@@ -10,21 +11,24 @@ interface UseModalFormOptions {
 
 function useModalForm(options: UseModalFormOptions) {
     const [loading, setLoading] = useState(false);
+    const { showSnackbar } = useSnackbar();
 
     const handleSave = async () => {
         if (!options.hasChanges()) {
-            alert(options.noChangesMessage ?? "Ви нічого не змінили!");
+            showSnackbar(options.noChangesMessage ?? "Ви нічого не змінили!","warning");
             return;
         }
 
         try {
             setLoading(true);
             await options.onSave();
+            showSnackbar("Збережено!", "success");
             options.onSuccess?.();
             options.setOpen(false);
         }
         catch (error) {
-            alert(error);
+            const message = error instanceof Error ? error.message : String(error);
+            showSnackbar(message,"error");
         }
         finally {
             setLoading(false);
