@@ -31,7 +31,6 @@ export default function TarifDrawer({ setOpen, onSuccess }: { setOpen: (value: b
         setCapacity("");
         setMinutes("");
         setPrice("");
-        resetMessages();
     };
 
     return (

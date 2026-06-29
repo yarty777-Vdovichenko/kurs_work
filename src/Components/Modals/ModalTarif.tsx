@@ -1,4 +1,4 @@
-import { TextField, Typography } from "@mui/material"
+import { TextField } from "@mui/material"
 import { type ModalTarifProps } from "../../types/types"
 import { useState } from "react"
 import { putTarifs } from "../../api/tarifs.api";

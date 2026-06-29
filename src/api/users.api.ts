@@ -10,5 +10,5 @@ export async function deleteUser(id:string) {
     return apiRequest<void>(()=> api.delete(`/users/${id}`));
 }
 export async function patchUser(id: string, data: { name?: string; email?: string; role?: Role; password?: string }) {
-    return apiRequest<User>(()=> api.patch(`/users/${id}`, data));
+    return apiRequest<void>(()=> api.patch(`/users/${id}`, data));
 }

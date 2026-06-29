@@ -7,7 +7,7 @@ export function getTarifs() {
 }
 
 export function postTarifs(name: string, internet_capacity: number, minutes: number, additional: string, price: number) {
-    return apiRequest<Tarif>(() => api.post("/tarifs", { name, internet_capacity, minutes, additional, price }));
+    return apiRequest<void>(() => api.post("/tarifs", { name, internet_capacity, minutes, additional, price }));
 }
 
 export function deleteTarifs(id: string, newTarifId: string) {
@@ -15,7 +15,7 @@ export function deleteTarifs(id: string, newTarifId: string) {
 }
 
 export function putTarifs(id: string, tarif: Tarif) {
-    return apiRequest<Tarif>(() => api.put(`/tarifs/${id}`, {
+    return apiRequest<void>(() => api.put(`/tarifs/${id}`, {
         name: tarif.name,
         internet_capacity: tarif.internet_capacity,
         minutes: tarif.minutes,
