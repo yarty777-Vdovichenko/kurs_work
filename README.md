@@ -1,73 +1,67 @@
-# React + TypeScript + Vite
+# Telecom CRM
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A full-featured CRM system for managing a telecom operator: subscribers, SIM cards, tariffs, users, and registration requests. A university coursework project with a focus on clean frontend architecture.
 
-Currently, two official plugins are available:
+**Live demo:** https://kurswork.vercel.app
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Tech Stack
 
-## React Compiler
+**Frontend:** React 19, TypeScript, Redux Toolkit, React Router, MUI, Recharts, Axios  
+**Backend:** ASP.NET Core 8, MongoDB — [separate repository](https://github.com/your-username/your-backend-repo)  
+**Testing:** Vitest, React Testing Library
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Features
 
-## Expanding the ESLint configuration
+- JWT authentication — access token in memory, refresh token in httpOnly cookie, automatic silent refresh on 401
+- Role-based access control (RBAC): `User`, `Manager`, `Admin` — enforced on both frontend (route guards, conditional rendering) and backend
+- Full CRUD for subscribers, SIM cards and tariffs with server-side pagination, search and filtering
+- Registration request flow — users submit requests, managers approve or reject them
+- Dashboard with live statistics and charts (Recharts)
+- Global notification system (Snackbar) and confirmation dialogs replacing native `alert`/`confirm`
+- Route-level code splitting via `React.lazy` + `Suspense` for a smaller initial bundle
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Architecture Decisions
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+A few intentional choices worth knowing before reading the code.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+**Redux over Context for auth state.** `accessToken` and `role` are read in many independent places — the axios interceptor, route guards, the header. `useSelector` lets each consumer subscribe to exactly the field it needs, avoiding the re-render cascade that Context causes when any part of the shared value changes. For UI-only state with no such requirement (notifications, confirmations), the lighter Context API was used instead.
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+**Shell components for forms.** All modals and drawers share the same visual frame — wrapper, Save/Cancel buttons, loading indicator. This is extracted into `ModalShell` / `DrawerShell`. The repeated save logic — checking for changes, try/catch, showing a result notification — lives in `useModalForm` / `useDrawerForm` hooks. An exception was made where unification would have added more complexity than it saved (the SIM edit form has two independent validations that don't fit a single `hasChanges` condition).
+
+**`apiRequest<T>` as a request wrapper.** Every API endpoint repeated the same try/catch block with axios error handling. Extracted into one generic function — each API method is now a single line.
+
+**RTK Query intentionally skipped.** Lists (subscribers, tariffs, users) are built with `useState` / `useEffect`; Redux is used only for auth. This is a deliberate trade-off favouring simplicity and transparency for a coursework project. Migrating to RTK Query is the planned next step.
+
+## Project Structure
+
+```
+src/
+├── api/            # backend requests, one file per entity
+├── Components/     # reusable UI blocks (Shells, cards, filters, FAB)
+├── contexts/       # Snackbar Context + Provider
+├── hooks/          # form logic, refresh, confirmation dialog
+├── Layout_Pages/   # layout wrappers (public / admin area)
+├── Pages/          # application pages
+├── store/          # Redux: auth slice
+└── types/          # shared TypeScript types
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Running Locally
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
+npm run dev
 ```
+
+Create a `.env` file with `VITE_API_URL` pointing to the backend.
+
+```bash
+npm run test    # run tests
+npm run build   # production build
+```
+
+## Roadmap
+
+- [ ] Migrate list pages to RTK Query
+- [ ] Expand test coverage
+- [ ] Dockerise the frontend
