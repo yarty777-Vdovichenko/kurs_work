@@ -19,14 +19,18 @@
     gap: 40px;
     text-align: left;
 }
+.info{
+    z-index: 999;
+}
 .info__header{
     color: white;
     font-weight: 500;
     font-size: 48px;
+    z-index: 9999;
 }
 .info__header--purple{
     opacity: 1 !important;
-    color: #BA6EED !important;
+    color: #deadff !important;
     font-weight: 900 !important;
     font-size: 48px !important;
 }
@@ -34,6 +38,7 @@
     color: white;
     font-weight: 100;
     font-size: 18px;
+    z-index: 9999;
 }
 .buttons{
     
