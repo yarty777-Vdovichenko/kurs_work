@@ -7,7 +7,7 @@ A full-featured CRM system for managing a telecom operator: subscribers, SIM car
 ## Tech Stack
 
 **Frontend:** React 19, TypeScript, Redux Toolkit, React Router, MUI, Recharts, Axios  
-**Backend:** ASP.NET Core 8, MongoDB — [separate repository](https://github.com/your-username/your-backend-repo)  
+**Backend:** ASP.NET Core 8, MongoDB — [separate repository https://github.com/yarty777-Vdovichenko/kurs_work_back] 
 **Testing:** Vitest, React Testing Library
 
 ## Features
