@@ -4,6 +4,16 @@ A full-featured CRM system for managing a telecom operator: subscribers, SIM car
 
 **Live demo:** https://kurswork.vercel.app
 
+### Demo credentials
+
+| Role    | Email            | Password    |
+|---------|------------------|-------------|
+| Admin   | admin@demo.com   | Demo12345   |
+| Manager | manager@demo.com | Demo12345   |
+| User    | user@demo.com    | Demo12345   |
+
+> Demo data resets automatically every 12 hours.
+
 ## Tech Stack
 
 **Frontend:** React 19, TypeScript, Redux Toolkit, React Router, MUI, Recharts, Axios  
