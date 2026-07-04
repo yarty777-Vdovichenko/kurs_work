@@ -4,6 +4,18 @@ A full-featured CRM system for managing a telecom operator: subscribers, SIM car
 
 **Live demo:** https://kurswork.vercel.app
 
+### Demo credentials
+
+| Role    | Email            | Password    |
+|---------|------------------|-------------|
+| Admin   | admin@demo.com   | Demo12345   |
+| Manager | manager@demo.com | Demo12345   |
+| User    | user@demo.com    | Demo12345   |
+
+> Demo data resets automatically every 12 hours.
+
+![Dashboard](docs/screenshots/dashboard.png)
+
 ## Tech Stack
 
 **Frontend:** React 19, TypeScript, Redux Toolkit, React Router, MUI, Recharts, Axios  
@@ -15,6 +27,9 @@ A full-featured CRM system for managing a telecom operator: subscribers, SIM car
 - JWT authentication — access token in memory, refresh token in httpOnly cookie, automatic silent refresh on 401
 - Role-based access control (RBAC): `User`, `Manager`, `Admin` — enforced on both frontend (route guards, conditional rendering) and backend
 - Full CRUD for subscribers, SIM cards and tariffs with server-side pagination, search and filtering
+
+![Subscribers page](docs/screenshots/subscribers.png)
+
 - Registration request flow — users submit requests, managers approve or reject them
 - Dashboard with live statistics and charts (Recharts)
 - Global notification system (Snackbar) and confirmation dialogs replacing native `alert`/`confirm`
